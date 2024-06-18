@@ -1,11 +1,28 @@
-import { Button } from "@mui/material";
 import { UseDrawerContext } from "../shared/contexts";
+import { useEffect } from "react";
+import { Dashboard } from "../shared/pages";
 
 export default function Root() {
-    const { toggleDrawerOpen } = UseDrawerContext();
+    const { setDrawerOptions } = UseDrawerContext();
+
+    useEffect(() => {
+      setDrawerOptions([
+        {
+          icon: 'home',
+          path: '/pagina-inicial',
+          label: 'Página Inicial',
+        },
+        {
+          icon: 'star',
+          path: '/avaliacoes',
+          label: 'Avaliações',
+        }
+      ]);
+    }, []);
+
     return (
       <>
-        <Button variant="contained" color="primary" onClick={ toggleDrawerOpen }>Toggle Drawer</Button>
+        <Dashboard />
       </>
     );
   }

@@ -1,8 +1,9 @@
-import { Divider, Drawer, Icon, List, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, useTheme } from '@mui/material';
+import { Divider, Drawer, List, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, useTheme } from '@mui/material';
+import Icon from '@mui/material/Icon';
 import { Box } from '@mui/system';
-import { UseDrawerContext } from '../../contexts';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { useNavigate } from 'react-router-dom';
+import { UseAppThemeContext, UseDrawerContext } from '../../contexts';
+
+import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 
 interface IListItemLink {
     label: string;
@@ -14,13 +15,16 @@ interface IListItemLink {
 const ListItemLink: React.FC<IListItemLink> = ({ to, icon, label, onClick }) => {
     const navigate = useNavigate();
 
+    const resolvedPath = useResolvedPath(to);
+    const match = useMatch({ path: resolvedPath.pathname, end: false});
+
     const handleClick = () => {
         navigate(to);
         onClick?.();
     };
     
     return(
-        <ListItemButton onClick={handleClick}>
+        <ListItemButton selected={!!match} onClick={handleClick}>
             <ListItemIcon>
                 <Icon>{icon}</Icon>
             </ListItemIcon>
@@ -37,7 +41,8 @@ export const MenuLateral: React.FC<IMenuLateral> = ({ children }) => {
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const { isDrawerOpen, toggleDrawerOpen } = UseDrawerContext();
+    const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = UseDrawerContext();
+    const { toggleTheme } = UseAppThemeContext();
 
     return(
         <>
@@ -49,12 +54,26 @@ export const MenuLateral: React.FC<IMenuLateral> = ({ children }) => {
                     <Divider />
                     <Box flex={1}>
                         <List component="nav">
-                            <ListItemLink 
-                                icon='home'
-                                to='pagina-inicial'
-                                label='Página Inicial'
+                            {drawerOptions.map(drawerOption =>(
+                                <ListItemLink 
+                                key={drawerOption.path}
+                                icon={drawerOption.icon}
+                                to={drawerOption.path}
+                                label={drawerOption.label}
                                 onClick={smDown ? toggleDrawerOpen : undefined}
-                            />
+                                />
+                            ))}
+                        </List> 
+                    </Box>
+
+                    <Box>
+                        <List component="nav">
+                            <ListItemButton onClick={toggleTheme}>
+                                <ListItemIcon>
+                                    <Icon>dark_mode</Icon>
+                                </ListItemIcon>
+                                <ListItemText primary="Alternar tema" />
+                            </ListItemButton>
                         </List> 
                     </Box>
                 </Box>
