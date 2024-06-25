@@ -1,9 +1,15 @@
+import { Environment } from "../../environment";
 import { Api } from "../axios-config";
 
 
-interface IListAvaliation {
+export interface IListAvaliation {
     name: string;
     questionCount: number;
+}
+
+type TAvaliationsComTotalCount = {
+    data: IListAvaliation[];
+    totalCount: number;
 }
 
 const getByName = async( name = '', page = 1 ): Promise<IListAvaliation | Error> => {
@@ -47,8 +53,27 @@ const getAvaliationVerify = async(name: string): Promise<boolean | Error> => {
 };
 
 
+const getAll = async (page = 1, filter = ''): Promise<TAvaliationsComTotalCount | Error> => {
+    try {
+        const urlRelativa = `/avaliation?_page=${page}&_limit=${Environment.LIMITE_DE_LINHAS}&name=${filter}`;
+
+        const { data, headers } = await Api.get(urlRelativa);
+
+        if (data) {
+            return{
+                data,
+                totalCount: Number(headers['x-total-count'] || Environment.LIMITE_DE_LINHAS),
+            }
+        }
+        return new Error('Erro ao listar os registros.');
+    } catch (error) {
+        return new Error((error as { message: string }).message || 'Erro ao listar os registros.');
+    }
+};
+
 export const AvaliationService = {
     getByName,
     updateName,
     getAvaliationVerify,
+    getAll,
 };
