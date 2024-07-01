@@ -1,9 +1,33 @@
+import { Outlet, createBrowserRouter } from "react-router-dom";
+import { Dashboard, DetalheDeAvaliacoes, ListagemDeAvaliacoes } from "../shared/pages";
+import { MenuLateral } from "../shared/components";
 import { UseDrawerContext } from "../shared/contexts";
 import { useEffect } from "react";
-import { Dashboard } from "../shared/pages";
 
-export default function Root() {
-    const { setDrawerOptions } = UseDrawerContext();
+export const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        path: "/pagina-inicial",
+        element:  <Dashboard />,
+      },
+      {
+        path: "/avaliacoes",
+        element: <ListagemDeAvaliacoes />,
+      },
+      {
+        path: "/avaliacoes/detalhe/:id",
+        element: <DetalheDeAvaliacoes />,
+      },
+    ],
+  }
+]);
+
+
+function Layout() {
+  const { setDrawerOptions } = UseDrawerContext();
 
     useEffect(() => {
       setDrawerOptions([
@@ -19,11 +43,9 @@ export default function Root() {
         }
       ]);
     }, []);
-
-    return (
-      <>
-        <Dashboard />
-      </>
-    );
-  }
-  
+  return (
+    <MenuLateral>
+      <Outlet />
+    </MenuLateral>
+  );
+}

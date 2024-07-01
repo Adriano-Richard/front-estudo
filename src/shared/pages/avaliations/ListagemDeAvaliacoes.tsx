@@ -1,16 +1,17 @@
-import { useSearchParams } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { FerramentasDaListagem } from "../../components"
 import { LayoutBaseDePagina } from "../../layouts"
 import { useEffect, useMemo, useState } from "react";
 import { AvaliationService, IListAvaliation } from "../../services/avaliations/AvaliationService";
 import { useDebounce } from "../../hooks/UseDebounce";
-import { LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
+import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
 import { Environment } from "../../environment";
 
 
 export const ListagemDeAvaliacoes: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const { debounce } = useDebounce();
+    const navigate = useNavigate();
 
     const [totalCount, setTotalCount] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
@@ -45,6 +46,22 @@ export const ListagemDeAvaliacoes: React.FC = () => {
         
     }, [busca, pagina]);
 
+    // const handleDelete = (id: number) => {
+    //     if (confirm('Realmente deseja apagar?')){
+    //         AvaliationService.deleteById(id)
+    //             .then(result => {
+    //                 if(result instanceof Error){
+    //                     alert(result.message);
+    //                 } else{
+    //                      setRows(oldRows => [
+    //                          ...oldRows.filter(oldRow => oldRow.id !== id),
+    //                      ]);
+    //                      alert('Registro apagado com sucesso!');
+    //                 }
+    //             })
+    //     }
+    // };
+
     return (
         <LayoutBaseDePagina
             titulo='Listagem de avaliaçoes'
@@ -52,6 +69,7 @@ export const ListagemDeAvaliacoes: React.FC = () => {
                 mostrarInputBusca
                 textoDaBusca={busca}
                 textoBotaoNovo='Nova' 
+                aoClicarEmNovo={() => navigate('/avaliacoes/detalhe/nova')}
                 aoMudarTextoDeBusca={texto => setSearchParams({ busca: texto, pagina: '1' }, { replace: true })}
                 />
             }         
@@ -68,7 +86,14 @@ export const ListagemDeAvaliacoes: React.FC = () => {
                     <TableBody>
                         {rows.map(row => (
                             <TableRow key={row.name}>
-                                <TableCell>Ações</TableCell>
+                                <TableCell>
+                                    <IconButton>
+                                        <Icon>delete</Icon>
+                                    </IconButton>
+                                    <IconButton onClick={() => navigate(`/avaliacoes/detalhe/${row.name}`)}>
+                                        <Icon>edit</Icon>
+                                    </IconButton>
+                                </TableCell>
                                 <TableCell>{row.name}</TableCell>
                                 <TableCell>{row.questionCount}</TableCell>
                             </TableRow>

@@ -1,40 +1,37 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
-  createBrowserRouter,
+  // createBrowserRouter,
   RouterProvider,
-  Outlet
+  // Outlet
 } from "react-router-dom";
 import './index.css'
-import Root from "./routes/root";
 import { DrawerProvider, AppThemeProvider } from './shared/contexts';
-import { MenuLateral } from './shared/components/menu-lateral/MenuLateral';
-import { ListagemDeAvaliacoes } from './shared/pages';
+import { router } from './routes/root';
+// import { MenuLateral } from './shared/components/menu-lateral/MenuLateral';
+// import { Dashboard, DetalheDeAvaliacoes, ListagemDeAvaliacoes } from './shared/pages';
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      {
-        path: "/pagina-inicial",
-        element: <Root />,
-      },
-      {
-        path: "/avaliacoes",
-        element: <ListagemDeAvaliacoes />,
-      },
-    ],
-  }
-]);
+// const router = createBrowserRouter([
+//   {
+//     path: "/",
+//     element: <Layout />,
+//     children: [
+//       {
+//         path: "/pagina-inicial",
+//         element:  <Dashboard />,
+//       },
+//       {
+//         path: "/avaliacoes",
+//         element: <ListagemDeAvaliacoes />,
+//       },
+//       {
+//         path: "/avaliacoes/detalhe/:id",
+//         element: <DetalheDeAvaliacoes />,
+//       },
+//     ],
+//   }
+// ]);
 
-function Layout() {
-  return (
-    <MenuLateral>
-      <Outlet />
-    </MenuLateral>
-  );
-}
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

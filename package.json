@@ -17,6 +17,8 @@
     "@mui/icons-material": "^5.15.18",
     "@mui/material": "^5.15.18",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
+    "@unform/core": "^2.1.6",
+    "@unform/web": "^2.1.6",
     "axios": "^1.7.2",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.4",
