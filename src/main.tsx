@@ -8,29 +8,7 @@ import {
 import './index.css'
 import { DrawerProvider, AppThemeProvider } from './shared/contexts';
 import { router } from './routes/root';
-// import { MenuLateral } from './shared/components/menu-lateral/MenuLateral';
-// import { Dashboard, DetalheDeAvaliacoes, ListagemDeAvaliacoes } from './shared/pages';
-
-// const router = createBrowserRouter([
-//   {
-//     path: "/",
-//     element: <Layout />,
-//     children: [
-//       {
-//         path: "/pagina-inicial",
-//         element:  <Dashboard />,
-//       },
-//       {
-//         path: "/avaliacoes",
-//         element: <ListagemDeAvaliacoes />,
-//       },
-//       {
-//         path: "/avaliacoes/detalhe/:id",
-//         element: <DetalheDeAvaliacoes />,
-//       },
-//     ],
-//   }
-// ]);
+import './shared/forms/TraducoesYup';
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

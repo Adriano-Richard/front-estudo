@@ -80,12 +80,17 @@ const updateById = async (id: number, dados: IListAvaliation): Promise<void | Er
     }
 };
 
-const create = async (id: number, dados: IListAvaliation): Promise<void | Error> => {
+const create = async (dados: IListAvaliation): Promise<number | Error> => {
     try{
-        await Api.put(`/avaliation/${id}`, dados);
+        const { data } = await Api.post('/avaliation/', dados);
+        if (data) {
+            return data.id;
+          }
+      
+          return new Error('Erro ao criar o registro.');
     } catch (error) {
         console.error(error);
-        return new Error((error as { message: string }).message || 'Erro ao atualizar o registro.');
+        return new Error((error as { message: string }).message || 'Erro ao criar o registro.');
     }
 };
 

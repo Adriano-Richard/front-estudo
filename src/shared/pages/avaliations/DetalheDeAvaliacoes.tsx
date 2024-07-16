@@ -4,13 +4,18 @@ import { FerramentasDeDetalhe } from "../../components";
 import { useEffect, useState } from "react";
 import { AvaliationService } from "../../services/avaliations/AvaliationService";
 import { Box, Grid, LinearProgress, Paper, Typography } from "@mui/material";
-import { VTextField, VForm, useVForm } from "../../forms";
+import { VTextField, VForm, useVForm, IVFormErros } from "../../forms";
+import * as yup from "yup";
 
 
 interface IFormData{
     name: string;
     questionCount: number;
 }
+const formValidationSchema: yup.Schema<IFormData> = yup.object().shape({
+    name: yup.string().required().min(3),
+    questionCount: yup.number().required(),
+});
 
 export const DetalheDeAvaliacoes: React.FC = () => {
     const { id = 'nova' } = useParams<'id'>();
@@ -22,37 +27,55 @@ export const DetalheDeAvaliacoes: React.FC = () => {
     const [nome, setNome] = useState('');
 
     const handleSave = (dados: IFormData) => {
-        setIsLoading(true);
+
+        formValidationSchema.
+            validate(dados, { abortEarly: false })
+            .then((dadosValidados) => {
+                setIsLoading(true);
         
-        if(id === 'nova'){
-            AvaliationService
-                .create(dados)
-                .then((result) => {
-                    setIsLoading(false);
-                    if (result instanceof Error) {
-                        alert(result.message);
-                    } else {
-                        if (isSaveAndClose()) {
-                            navigate('/avaliation');
-                        } else {
-                            navigate(`/avaliation/detalhe/${result}`);
-                        }
-                    }
-                });
-        }   else {
-                AvaliationService
-                    .updateById(Number(id), dados)
-                    .then((result) => {
-                        setIsLoading(false);
-                        if (result instanceof Error) {
-                            alert(result.message);
-                        } else {
-                            if (isSaveAndClose()) {
-                                navigate('/avaliation');
+                if(id === 'nova'){
+                    AvaliationService
+                        .create(dadosValidados)
+                        .then((result) => {
+                            setIsLoading(false);
+                            if (result instanceof Error) {
+                                alert(result.message);
+                            } else {
+                                if (isSaveAndClose()) {
+                                    navigate('/avaliation');
+                                } else {
+                                    navigate(`/avaliation/detalhe/${result}`);
+                                }
                             }
-                        }
-                    });
-        }
+                        });
+                }   else {
+                        AvaliationService
+                            .updateById(Number(id), dadosValidados)
+                            .then((result) => {
+                                setIsLoading(false);
+                                if (result instanceof Error) {
+                                    alert(result.message);
+                                } else {
+                                    if (isSaveAndClose()) {
+                                        navigate('/avaliation');
+                                    }
+                                }
+                            });
+                    }
+            })
+            .catch((errors: yup.ValidationError) => {
+                const ValidationErrors: IVFormErros = {};
+
+                errors.inner.forEach(error => {
+                    if (!error.path) return;
+
+                    ValidationErrors[error.path] = error.message;
+                });
+                console.log(ValidationErrors);
+                formRef.current?.setErrors(ValidationErrors);
+            })
+
+        
     };
 
 
