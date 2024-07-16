@@ -71,9 +71,29 @@ const getAll = async (page = 1, filter = ''): Promise<TAvaliationsComTotalCount 
     }
 };
 
+const updateById = async (id: number, dados: IListAvaliation): Promise<void | Error> => {
+    try{
+        await Api.put(`/avaliation/${id}`, dados);
+    } catch (error) {
+        console.error(error);
+        return new Error((error as { message: string }).message || 'Erro ao atualizar o registro.');
+    }
+};
+
+const create = async (id: number, dados: IListAvaliation): Promise<void | Error> => {
+    try{
+        await Api.put(`/avaliation/${id}`, dados);
+    } catch (error) {
+        console.error(error);
+        return new Error((error as { message: string }).message || 'Erro ao atualizar o registro.');
+    }
+};
+
 export const AvaliationService = {
     getByName,
     updateName,
     getAvaliationVerify,
     getAll,
+    create,
+    updateById
 };
