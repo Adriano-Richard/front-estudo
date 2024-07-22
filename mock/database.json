@@ -5,5 +5,8 @@
             "name": "Avaliação",
             "questionCount": 40
         }
-    ]
+    ],
+    "auth": {
+        "accesstoken": "aaaaaaaaaaaaaa.bbbbbbbbbbbbbbb.ccccccccccc"
+    }
 }
