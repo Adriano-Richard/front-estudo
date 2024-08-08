@@ -1,6 +1,6 @@
 import { Outlet, createBrowserRouter } from "react-router-dom";
 import { Dashboard, DetalheDeAvaliacoes, ListagemDeAvaliacoes } from "../shared/pages";
-import { MenuLateral } from "../shared/components";
+import { Login, MenuLateral } from "../shared/components";
 import { UseDrawerContext } from "../shared/contexts";
 import { useEffect } from "react";
 
@@ -44,8 +44,10 @@ function Layout() {
       ]);
     }, []);
   return (
-    <MenuLateral>
-      <Outlet />
-    </MenuLateral>
+    <Login>
+      <MenuLateral>
+        <Outlet />
+      </MenuLateral>
+    </Login>
   );
 }
