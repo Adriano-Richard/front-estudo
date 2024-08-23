@@ -4,7 +4,7 @@ import { LayoutBaseDePagina } from "../../layouts"
 import { useEffect, useMemo, useState } from "react";
 import { AvaliationService, IListAvaliation } from "../../services/avaliations/AvaliationService";
 import { useDebounce } from "../../hooks/UseDebounce";
-import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
+import { Container, Grid, Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
 import { Environment } from "../../environment";
 
 
@@ -64,38 +64,38 @@ export const ListagemDeAvaliacoes: React.FC = () => {
 
     return (
         <LayoutBaseDePagina
-            titulo='Listagem de avaliaçoes'
-            barraDeFerramentas={<FerramentasDaListagem
-                mostrarInputBusca
-                textoDaBusca={busca}
-                textoBotaoNovo='Nova' 
-                aoClicarEmNovo={() => navigate('/avaliacoes/detalhe/nova')}
-                aoMudarTextoDeBusca={texto => setSearchParams({ busca: texto, pagina: '1' }, { replace: true })}
-                />
-            }         
+        titulo='Avaliações'
+        barraDeFerramentas={<FerramentasDaListagem
+            mostrarInputBusca
+            textoDaBusca={busca}
+            textoBotaoNovo='Nova' 
+            aoClicarEmNovo={() => navigate('/avaliacoes/detalhe/nova')}
+            aoMudarTextoDeBusca={texto => setSearchParams({ busca: texto, pagina: '1' }, { replace: true })}
+            />
+        }         
         >
-            <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
+            <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }} >
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Ações</TableCell>
                             <TableCell>Nome</TableCell>
                             <TableCell>Quantidade de questões</TableCell>
+                            <TableCell>Ações</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {rows.map(row => (
                             <TableRow key={row.name}>
+                                <TableCell>{row.name}</TableCell>
+                                <TableCell>{row.questionCount}</TableCell>
                                 <TableCell>
-                                    <IconButton>
+                                    <IconButton sx={{ mr: 2 }}>
                                         <Icon>delete</Icon>
                                     </IconButton>
                                     <IconButton onClick={() => navigate(`/avaliacoes/detalhe/${row.name}`)}>
                                         <Icon>edit</Icon>
                                     </IconButton>
                                 </TableCell>
-                                <TableCell>{row.name}</TableCell>
-                                <TableCell>{row.questionCount}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -119,7 +119,7 @@ export const ListagemDeAvaliacoes: React.FC = () => {
                                             page={pagina}
                                             count={Math.ceil(totalCount / Environment.LIMITE_DE_LINHAS)} 
                                             onChange={(_, newPage) => setSearchParams({ busca, pagina: newPage.toString() }, { replace: true })}
-                                        />
+                                            />
                                 </TableCell>
                             </TableRow>
                         )}

@@ -1,7 +1,7 @@
 import { Outlet, createBrowserRouter } from "react-router-dom";
-import { Dashboard, DetalheDeAvaliacoes, ListagemDeAvaliacoes } from "../shared/pages";
+import { Dashboard, DetalheDeAvaliacoes, ListagemDeAvaliacoes, UserProfile } from "../shared/pages";
 import { Login, MenuLateral } from "../shared/components";
-import { UseDrawerContext } from "../shared/contexts";
+import { CompactProvider, UseDrawerContext } from "../shared/contexts";
 import { useEffect } from "react";
 
 export const router = createBrowserRouter([
@@ -20,6 +20,10 @@ export const router = createBrowserRouter([
       {
         path: "/avaliacoes/detalhe/:id",
         element: <DetalheDeAvaliacoes />,
+      },
+      {
+        path: "/usuarios/detalhe",
+        element: <UserProfile />,
       },
     ],
   }
@@ -45,9 +49,12 @@ function Layout() {
     }, []);
   return (
     <Login>
-      <MenuLateral>
-        <Outlet />
-      </MenuLateral>
+      <CompactProvider>
+
+        <MenuLateral>
+          <Outlet />
+        </MenuLateral>
+      </CompactProvider>
     </Login>
   );
 }

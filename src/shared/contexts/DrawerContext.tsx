@@ -10,7 +10,7 @@ interface IDrawerContextData {
   isDrawerOpen: boolean;
   drawerOptions: IDrawerOption[];
   toggleDrawerOpen: () => void;
-  setDrawerOptions: (nweDrawerOptions: IDrawerOption[]) => void;
+  setDrawerOptions: (newDrawerOptions: IDrawerOption[]) => void;
 }
 
 const DrawerContext = createContext({} as IDrawerContextData);

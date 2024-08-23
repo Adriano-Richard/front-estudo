@@ -56,8 +56,9 @@ export const FerramentasDeDetalhe: React.FC<IFerramentasDeDetalheProps> = ({
           paddingX={2}
           display="flex"
           alignItems="center"
-          height={theme.spacing(5)}
+          height={theme.spacing(7)}
           component={Paper}
+          
         >
           {(mostrarBotaoSalvar && !mostrarBotaoSalvarCarregando) && (
             <Button
@@ -119,7 +120,7 @@ export const FerramentasDeDetalhe: React.FC<IFerramentasDeDetalheProps> = ({
               disableElevation
               variant='outlined'
               onClick={aoClicarEmNovo}
-              startIcon={<Icon>add</Icon>}
+              startIcon={<Icon sx={{ color: 'white' }}>add</Icon>}
             >
               <Typography variant='button' whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
                 {textoBotaoNovo}

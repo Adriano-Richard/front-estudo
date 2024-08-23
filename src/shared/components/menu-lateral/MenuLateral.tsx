@@ -1,18 +1,20 @@
-import { Divider, Drawer, List, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, useTheme } from '@mui/material';
+import { Avatar, Divider, Drawer, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Theme, Typography, useMediaQuery, useTheme } from '@mui/material';
 import Icon from '@mui/material/Icon';
 import { Box } from '@mui/system';
-import { UseAppThemeContext, UseDrawerContext, useAuthContext } from '../../contexts';
+import { CompactProvider, UseAppThemeContext, UseDrawerContext, useAuthContext, useCompactMenuContext } from '../../contexts';
 
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
+import { useState } from 'react';
 
 interface IListItemLink {
     label: string;
     icon: string;
     to: string;
     onClick: (() => void) | undefined;
+    isDrawerOpen: boolean;
 }
 
-const ListItemLink: React.FC<IListItemLink> = ({ to, icon, label, onClick }) => {
+const ListItemLink: React.FC<IListItemLink> = ({ to, icon, label, onClick, isDrawerOpen }) => {
     const navigate = useNavigate();
 
     const resolvedPath = useResolvedPath(to);
@@ -28,7 +30,7 @@ const ListItemLink: React.FC<IListItemLink> = ({ to, icon, label, onClick }) => 
             <ListItemIcon>
                 <Icon>{icon}</Icon>
             </ListItemIcon>
-            <ListItemText primary={label} />
+            {isDrawerOpen && <ListItemText primary={label} />}
         </ListItemButton>
     );
 };
@@ -40,55 +42,119 @@ interface IMenuLateral{
 export const MenuLateral: React.FC<IMenuLateral> = ({ children }) => {
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+    const mdDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
 
     const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = UseDrawerContext();
     const { toggleTheme } = UseAppThemeContext();
     const { logout } = useAuthContext();
+    const { isCompact, toggleCompact } = useCompactMenuContext();
+    //const [isCompact, setIsCompact] = useState(false);
+
+    const navigate = useNavigate();
+    const handleNavigate = () => {
+        navigate('/usuarios/detalhe'); // Substitua '/perfil' pela rota desejada
+    };
+
+    // const handleToggleCompact = () => {
+    //     setIsCompact(!isCompact);
+    // };
 
     return(
-        <>
-            <Drawer open={isDrawerOpen} variant={smDown ? 'temporary' : 'permanent'} onClose={toggleDrawerOpen}>
-                <Box width={theme.spacing(28)} height="100%" display="flex" flexDirection="column">
-                    <Box width="100%" height={theme.spacing(20)} display="flex" alignItems="center" justifyContent="center">
-                        Teste
-                    </Box>
-                    <Divider />
-                    <Box flex={1}>
+        
+            <><Drawer
+            open={isDrawerOpen || !isCompact}
+            variant={'permanent'}
+            onClose={toggleDrawerOpen}
+            PaperProps={{
+                style: {
+                    width: isCompact ? theme.spacing(7) : theme.spacing(28),
+                    transition: 'width 0.3s',
+                    boxShadow: theme.shadows[4],
+                }
+            }}
+        >
+            <Box height="100%" display="flex" flexDirection="column">
+                <Box
+                    width="100%"
+                    height={theme.spacing(20)}
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    flexDirection={'column'}
+
+                >
+                    {!isCompact &&
+                        <>
+                            <Avatar
+                                alt="Mike Andrew"
+                                src="/user/anime3.png"
+                                sx={{
+                                    width: 90,
+                                    height: 90,
+                                    margin: '0 auto 0px',
+                                    cursor: 'pointer'
+                                }}
+                                onClick={handleNavigate} // Adicione o evento de clique aqui
+                            />
+                            <Typography>Mike Andrew</Typography>
+                            <Typography variant="subtitle2">Ceo/Co-Founder</Typography>
+                        </>}
+                    {isCompact &&
+                        <>
+                            <Avatar
+                                alt="Mike Andrew"
+                                src="/user/anime3.png"
+                                sx={{ width: 40, height: 40, margin: '100px auto 0px', cursor: 'pointer' }}
+                                onClick={handleNavigate} />
+                        </>}
+                </Box>
+                <Divider />
+                <Box display="flex" alignItems="center" justifyContent="center" height={theme.spacing(smDown ? 6 : mdDown ? 8 : 10)}>
+                    {(
                         <List component="nav">
-                            {drawerOptions.map(drawerOption =>(
-                                <ListItemLink 
+                            <IconButton onClick={toggleCompact} style={{ boxShadow: 'none' }}>
+                                <Icon>{isCompact ? 'menu' : 'close'}</Icon>
+                            </IconButton>
+                        </List>
+                    )}
+
+
+                </Box>
+                <Box flex={1}>
+                    <List component="nav">
+                        {drawerOptions.map(drawerOption => (
+                            <ListItemLink
                                 key={drawerOption.path}
                                 icon={drawerOption.icon}
                                 to={drawerOption.path}
                                 label={drawerOption.label}
                                 onClick={smDown ? toggleDrawerOpen : undefined}
-                                />
-                            ))}
-                        </List> 
-                    </Box>
-
-                    <Box>
-                        <List component="nav">
-                            <ListItemButton onClick={toggleTheme}>
-                                <ListItemIcon>
-                                    <Icon>dark_mode</Icon>
-                                </ListItemIcon>
-                                <ListItemText primary="Alternar tema" />
-                            </ListItemButton>
-                            <ListItemButton onClick={logout}>
-                                <ListItemIcon>
-                                <Icon>logout</Icon>
-                                </ListItemIcon>
-                                <ListItemText primary="Sair" />
-                            </ListItemButton>
-                        </List> 
-                    </Box>
+                                isDrawerOpen={!isCompact} />
+                        ))}
+                    </List>
                 </Box>
-            </Drawer>
 
-            <Box height='100vh' marginLeft={smDown ? 0 : theme.spacing(28)}>
+                <Box>
+                    <List component="nav">
+                        <ListItemButton onClick={toggleTheme}>
+                            <ListItemIcon>
+                                <Icon>dark_mode</Icon>
+                            </ListItemIcon>
+                            {!isCompact && <ListItemText primary="Alternar tema" />}
+                        </ListItemButton>
+                        <ListItemButton onClick={logout}>
+                            <ListItemIcon>
+                                <Icon>logout</Icon>
+                            </ListItemIcon>
+                            {!isCompact && <ListItemText primary="Sair" />}
+                        </ListItemButton>
+                    </List>
+                </Box>
+            </Box>
+        </Drawer><Box height='100vh' marginLeft={isCompact ? 7 : theme.spacing(28)} sx={{
+            transition: 'margin-left 0.3s',
+        }}>
                 {children}
-            </Box>  
-        </>
-    )
-}
+            </Box></>  
+    );
+};
