@@ -39,7 +39,7 @@ export const DarkTheme = createTheme({
       styleOverrides: {
         root: {
           '& .MuiTableCell-root': {
-            color: '#088395', // Cor do texto para células no TableHead
+            color: '#E2E2B6', // Cor do texto para células no TableHead
             //backgroundColor: '#f0f0f0', // Cor de fundo para células no TableHead (opcional)
             fontWeight: 'bold', // Negrito para o texto das células no TableHead (opcional)
             //textAlign: 'center',
@@ -51,7 +51,7 @@ export const DarkTheme = createTheme({
       styleOverrides: {
         root: {
           '& .MuiTableCell-root': {
-            color: '#088395', // Cor do texto para células no TableHead
+            color: '#E2E2B6', // Cor do texto para células no TableHead
             //textAlign: 'center',
             //backgroundColor: '#f0f0f0', // Cor de fundo para células no TableHead (opcional)
             //fontWeight: 'bold', // Negrito para o texto das células no TableHead (opcional)
@@ -64,7 +64,7 @@ export const DarkTheme = createTheme({
         root: {
           '& .MuiOutlinedInput-root': {
             '& fieldset': {
-              borderColor: '#03346E', // Cor da borda antes de focar
+              borderColor: '#E2E2B6', // Cor da borda antes de focar
             },
             '&:hover fieldset': {
               borderColor: '#1565c0', // Cor da borda ao passar o mouse

@@ -99,6 +99,11 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                disabled={isLoading}
+                error={!!emailError}
+                helperText={emailError}
+                onKeyDown={() => setEmailError('')}
+                onChange={e => setEmail(e.target.value)}
               />
               <TextField
                 margin="normal"
@@ -109,16 +114,25 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={password}
+                disabled={isLoading}
+                error={!!passwordError}
+                helperText={passwordError}
+                onKeyDown={() => setPasswordError('')}
+                onChange={e => setPassword(e.target.value)}
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Lembrar"
               />
               <Button
-                type="submit"
+
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                disabled={isLoading}
+                onClick={handleSubmit}
+                endIcon={isLoading ? <CircularProgress variant='indeterminate' color='inherit' size={20} /> : undefined}
               >
                 Entrar
               </Button>
