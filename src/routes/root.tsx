@@ -1,5 +1,5 @@
 import { Outlet, createBrowserRouter } from "react-router-dom";
-import { Dashboard, DetalheDeAvaliacoes, ListagemDeAvaliacoes, UserProfile } from "../shared/pages";
+import { Dashboard, DetalheDeAvaliacoes, DetalheDeQuestoes, ListagemDeAvaliacoes, UserProfile } from "../shared/pages";
 import { Login, MenuLateral } from "../shared/components";
 import { CompactProvider, UseDrawerContext } from "../shared/contexts";
 import { useEffect } from "react";
@@ -25,6 +25,10 @@ export const router = createBrowserRouter([
         path: "/usuarios/detalhe",
         element: <UserProfile />,
       },
+      {
+        path: "/questoes/detalhe",
+        element: <DetalheDeQuestoes />,
+      },
     ],
   }
 ]);
@@ -41,9 +45,14 @@ function Layout() {
           label: 'Página Inicial',
         },
         {
-          icon: 'star',
+          icon: 'article',
           path: '/avaliacoes',
           label: 'Avaliações',
+        },
+        {
+          icon: 'bookmark',
+          path: '/questoes/detalhe',
+          label: 'Questões',
         }
       ]);
     }, []);

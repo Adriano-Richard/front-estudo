@@ -13,7 +13,7 @@ import { Login } from '@mui/icons-material';
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+  
     <AuthProvider>
       <AppThemeProvider>
           <DrawerProvider>
@@ -21,7 +21,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           </DrawerProvider>
       </AppThemeProvider>
     </AuthProvider>
-  </React.StrictMode>,
+,
 )
 
 
