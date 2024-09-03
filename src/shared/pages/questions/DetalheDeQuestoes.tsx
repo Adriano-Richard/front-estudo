@@ -3,12 +3,13 @@ import { LayoutBaseDePagina } from "../../layouts";
 import { FerramentasDeDetalhe } from "../../components";
 import { useEffect, useState } from "react";
 import { AvaliationService } from "../../services/avaliations/AvaliationService";
-import { Box, Button, FormControl, FormControlLabel, FormLabel, Grid, LinearProgress, MenuItem, Paper, Radio, RadioGroup, Select, TextField, Typography } from "@mui/material";
+import { Box, Button, FormControl, FormControlLabel, FormLabel, Grid, IconButton, LinearProgress, MenuItem, Paper, Radio, RadioGroup, Select, TextField, Typography } from "@mui/material";
 import { VTextField, VForm, useVForm, IVFormErros } from "../../forms";
 import * as yup from "yup";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { Delete, ContentCopy, StarBorder, Star } from "@mui/icons-material";
 
-
+//Criar arquivos para as interfaces e classes
 interface IFormData{
     name: string;
     questionCount: number;
@@ -18,8 +19,11 @@ type Question = {
     id: string;
     title: string;
     responseType: 'text' | 'radio' | 'dropdown';
+    isRequired: boolean;
   };
 
+
+//Criar arquivo para constantes e funções
 const formValidationSchema: yup.Schema<IFormData> = yup.object().shape({
     name: yup.string().required().min(3),
     questionCount: yup.number().required(),
@@ -38,8 +42,14 @@ export const DetalheDeQuestoes: React.FC = () => {
     const [questions, setQuestions] = useState<Question[]>([]);
 
     const handleAddQuestion = () => {
-        setQuestions([...questions, { id: `question-${questions.length}`, title: '', responseType: 'text' }]);
+        setQuestions([...questions, { id: `question-${questions.length}`, title: '', responseType: 'text', isRequired: false }]);
     };
+
+    const toggleRequired = (index: number) => {
+        const updatedQuestions = [...questions];
+        updatedQuestions[index].isRequired = !updatedQuestions[index].isRequired;
+        setQuestions(updatedQuestions);
+      };
 
     const handleTitleChange = (index: number, value: string) => {
         const updatedQuestions = [...questions];
@@ -153,6 +163,19 @@ export const DetalheDeQuestoes: React.FC = () => {
             })
     };
 
+    const handleRemoveQuestion = (index: number) => {
+        const updatedQuestions = [...questions];
+        updatedQuestions.splice(index, 1);
+        setQuestions(updatedQuestions);
+    };
+
+    const handleDuplicateQuestion = (index: number) => {
+        const questionToDuplicate = questions[index];
+        const newQuestion = { ...questionToDuplicate, id: `question-${questions.length}` };
+        const updatedQuestions = [...questions];
+        updatedQuestions.splice(index + 1, 0, newQuestion);
+        setQuestions(updatedQuestions);
+    };
 
     useEffect(() => {
         if (id !== 'nova'){
@@ -228,7 +251,31 @@ export const DetalheDeQuestoes: React.FC = () => {
                             >
                             <Grid container direction="column" padding={2} spacing={2}>
                                 <Grid item>
-                                <Typography variant="h6">Questão {index + 1}</Typography>
+                                <Box display="flex" alignItems="center" justifyContent="space-between">
+                                    <Box display="flex" alignItems="center" marginBottom={2}>
+                                        <Typography variant="subtitle1" marginRight={2}>
+                                            Questão {index + 1}
+                                        </Typography>
+                                        <IconButton onClick={() => toggleRequired(index)}>
+                                            {question.isRequired ? (
+                                            <Star style={{ color: 'red' }} fontSize="small" />
+                                            ) : (
+                                            <StarBorder fontSize="small" />
+                                            )}
+                                        </IconButton>
+                                        <Typography variant="body2" sx={{ marginLeft: 1 }}>
+                                            {question.isRequired ? "Obrigatória" : "Opcional"}
+                                        </Typography>
+                                    </Box>
+                                    <Box marginBottom={2}>
+                                        <IconButton onClick={() => handleRemoveQuestion(index)}>
+                                            <Delete />
+                                        </IconButton>
+                                        <IconButton onClick={() => handleDuplicateQuestion(index)}>
+                                            <ContentCopy />
+                                        </IconButton>
+                                    </Box>
+                                </Box>
                                 <TextField
                                     fullWidth
                                     label="Título da Questão"
@@ -259,6 +306,19 @@ export const DetalheDeQuestoes: React.FC = () => {
                 )}
                 </Droppable>
             </DragDropContext>
+            <VForm ref={formRef} onSubmit={handleSave}>
+                <Grid container spacing={2} mt={2}>
+                <Grid item xs={12} md={6}>
+                    <TextField
+                    fullWidth
+                    name="questionCount"
+                    disabled={true}
+                    label="Quantidade de Questões"
+                    value={questions.length}
+                    />
+                </Grid>
+                </Grid>
+            </VForm>
         </LayoutBaseDePagina>
     );
 }
