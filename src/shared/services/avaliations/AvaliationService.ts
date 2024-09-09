@@ -4,7 +4,7 @@ import { Api } from "../axios-config";
 
 export interface IListAvaliation {
     name: string;
-    questionCount: number;
+    questionCount?: number;
 }
 
 type TAvaliationsComTotalCount = {
@@ -31,7 +31,7 @@ const updateName = async(name: string, newAvaliationName: string): Promise<void 
     try {
         const urlRelativa = `/avaliation?Name=${name}&NewAvaliationName=${newAvaliationName}`;
 
-        await Api.post(urlRelativa);
+        await Api.put(urlRelativa);
     } catch (error) {
         return new Error((error as { message: string }).message || 'Erro ao listar os registros.');
     }
@@ -55,7 +55,7 @@ const getAvaliationVerify = async(name: string): Promise<boolean | Error> => {
 
 const getAll = async (page = 1, filter = ''): Promise<TAvaliationsComTotalCount | Error> => {
     try {
-        const urlRelativa = `/avaliation?_page=${page}&_limit=${Environment.LIMITE_DE_LINHAS}&name=${filter}`;
+        const urlRelativa = `/Avaliation?pageNumber=${page}`;
 
         const { data, headers } = await Api.get(urlRelativa);
 

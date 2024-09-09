@@ -8,6 +8,7 @@ import { VTextField, VForm, useVForm, IVFormErros } from "../../forms";
 import * as yup from "yup";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { Delete, ContentCopy, StarBorder, Star } from "@mui/icons-material";
+import { ResponseOptionsService } from "../../services/response-options/ResponseOptionsService";
 
 //Criar arquivos para as interfaces e classes
 interface IFormData{
@@ -18,21 +19,22 @@ interface IFormData{
 type Question = {
     id: string;
     title: string;
-    responseType: 'text' | 'radio' | 'dropdown';
+    responseTypeId: number | null;
     isRequired: boolean;
+    responseOptions?: string[];
   };
 
+  interface IResponseOption {
+    id: number;
+    namePatterns?: string;
+    responses?: string[];
+}
 
 //Criar arquivo para constantes e funções
-const formValidationSchema: yup.Schema<IFormData> = yup.object().shape({
-    name: yup.string().required().min(3),
-    questionCount: yup.number().required(),
-});
 
 export const DetalheDeQuestoes: React.FC = () => {
     const { id = 'nova' } = useParams<'id'>();
     const navigate = useNavigate();
-    // const [boxes, setBoxes] = useState([{}]);
 
     const { formRef, save, saveAndClose, isSaveAndClose } = useVForm();
 
@@ -41,9 +43,11 @@ export const DetalheDeQuestoes: React.FC = () => {
 
     const [questions, setQuestions] = useState<Question[]>([]);
 
+    const [responseTypes, setResponseTypes] = useState<IResponseOption[]>([]);
+
     const handleAddQuestion = () => {
-        setQuestions([...questions, { id: `question-${questions.length}`, title: '', responseType: 'text', isRequired: false }]);
-    };
+        setQuestions([...questions, { id: `question-${questions.length}`, title: '', responseTypeId: null, isRequired: false }]);
+    }
 
     const toggleRequired = (index: number) => {
         const updatedQuestions = [...questions];
@@ -57,11 +61,15 @@ export const DetalheDeQuestoes: React.FC = () => {
         setQuestions(updatedQuestions);
       };
 
-    const handleResponseTypeChange = (index: number, value: 'text' | 'radio' | 'dropdown') => {
+    const handleResponseTypeChange = (index: number, value: number) => {
         const updatedQuestions = [...questions];
-        updatedQuestions[index].responseType = value;
+        const selectedType = responseTypes.find((type) => type.id === value);
+
+        updatedQuestions[index].responseTypeId = value;
+        updatedQuestions[index].responseOptions = selectedType ? selectedType.responses : []; // Armazena as opções de resposta, se houver
+
         setQuestions(updatedQuestions);
-    };    
+    };  
 
     const handleDragEnd = (result: any) => {
         if (!result.destination) return;
@@ -71,96 +79,43 @@ export const DetalheDeQuestoes: React.FC = () => {
         setQuestions(reorderedQuestions);
     };
 
-    const renderResponseField = (responseType: 'text' | 'radio' | 'dropdown') => {
-        switch (responseType) {
-          case 'text':
-            return <TextField fullWidth placeholder="Resposta do usuário" />;
-          case 'radio':
-            return (
-                <FormControl>
-                    <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
-                    <RadioGroup
-                    row
-                    aria-labelledby="demo-row-radio-buttons-group-label"
-                    name="row-radio-buttons-group"
-                    >
-                    <FormControlLabel value="female" control={<Radio />} label="Female" />
-                    <FormControlLabel value="male" control={<Radio />} label="Male" />
-                    <FormControlLabel value="other" control={<Radio />} label="Other" />
-                    <FormControlLabel
-                        value="disabled"
-                        disabled
-                        control={<Radio />}
-                        label="other"
-                    />
-                    </RadioGroup>
-            </FormControl>
-            );
-          case 'dropdown':
-            return (
-              <Select fullWidth displayEmpty>
-                <MenuItem value="" disabled>Selecione uma opção</MenuItem>
-                <MenuItem value="option1">Opção 1</MenuItem>
-                <MenuItem value="option2">Opção 2</MenuItem>
-              </Select>
-            );
-          default:
-            return null;
-        }
-      };
+    const renderResponseField = (question: Question) => {
+        const selectedType = responseTypes.find((type) => type.id === question.responseTypeId);
 
-    // const handleAddBox = () => {
-    //     setBoxes([...boxes, {}]); // Adiciona uma nova caixa
-    //   };
+        if (!selectedType) return null;
+
+        switch (selectedType.namePatterns) {
+            case 'Text':
+                return <TextField fullWidth placeholder="Resposta do usuário" />;
+            case 'DropDown':
+                return (
+                    <Select fullWidth displayEmpty>
+                        <MenuItem value="" disabled>Selecione uma opção</MenuItem>
+                        {question.responseOptions?.map((option, index) => (
+                            <MenuItem key={index} value={option}>{option}</MenuItem>
+                        ))}
+                    </Select>
+                );
+            case 'RadioButton':
+                return (
+                    <FormControl>
+                        <FormLabel>Selecione uma opção</FormLabel>
+                        <RadioGroup row>
+                            {question.responseOptions?.map((option, index) => (
+                                <FormControlLabel key={index} value={option} control={<Radio />} label={option} />
+                            ))}
+                        </RadioGroup>
+                    </FormControl>
+                );
+            default:
+                return null;
+        }
+    };
+
 
     const handleSave = (dados: IFormData) => {
 
-        formValidationSchema.
-            validate(dados, { abortEarly: false })
-            .then((dadosValidados) => {
-                setIsLoading(true);
         
-                if(id === 'nova'){
-                    AvaliationService
-                        .create(dadosValidados)
-                        .then((result) => {
-                            setIsLoading(false);
-                            if (result instanceof Error) {
-                                alert(result.message);
-                            } else {
-                                if (isSaveAndClose()) {
-                                    navigate('/avaliation');
-                                } else {
-                                    navigate(`/avaliation/detalhe/${result}`);
-                                }
-                            }
-                        });
-                }   else {
-                        AvaliationService
-                            .updateById(Number(id), dadosValidados)
-                            .then((result) => {
-                                setIsLoading(false);
-                                if (result instanceof Error) {
-                                    alert(result.message);
-                                } else {
-                                    if (isSaveAndClose()) {
-                                        navigate('/avaliation');
-                                    }
-                                }
-                            });
-                    }
-            })
-            .catch((errors: yup.ValidationError) => {
-                const ValidationErrors: IVFormErros = {};
-
-                errors.inner.forEach(error => {
-                    if (!error.path) return;
-
-                    ValidationErrors[error.path] = error.message;
-                });
-                console.log(ValidationErrors);
-                formRef.current?.setErrors(ValidationErrors);
-            })
     };
 
     const handleRemoveQuestion = (index: number) => {
@@ -178,26 +133,18 @@ export const DetalheDeQuestoes: React.FC = () => {
     };
 
     useEffect(() => {
-        if (id !== 'nova'){
-            setIsLoading(true);
-
-            AvaliationService.getByName(id)
-                .then((result) => {
-                    setIsLoading(false);
-                    if (result instanceof Error) {
-                        alert(result.message);
-                        navigate('/avaliacoes');
-                    } else {
-                        setNome(result.name);
-                        formRef.current?.setData(result);
-                    }
-                });
-        } else {
-            formRef.current?.setData({
-                name: ''
+        setIsLoading(true);
+        ResponseOptionsService.getAll()
+            .then((result) => {
+                setIsLoading(false);
+                if (result instanceof Error) {
+                    alert(result.message);
+                    navigate('/');
+                } else {
+                    setResponseTypes(result.data);
+                }
             });
-        }
-    }, [id]);
+    }, []);
 
     return(
         <LayoutBaseDePagina 
@@ -285,15 +232,16 @@ export const DetalheDeQuestoes: React.FC = () => {
                                 />
                                 <Select
                                     fullWidth
-                                    value={question.responseType}
-                                    onChange={(e) => handleResponseTypeChange(index, e.target.value as 'text' | 'radio' | 'dropdown')}
+                                    value={question.responseTypeId || ''}
+                                    onChange={(e) => handleResponseTypeChange(index, Number(e.target.value))}
                                 >
-                                    <MenuItem value="text">Texto</MenuItem>
-                                    <MenuItem value="radio">Radiobutton</MenuItem>
-                                    <MenuItem value="dropdown">Dropdown</MenuItem>
+                                    <MenuItem value="" disabled>Selecione o tipo de resposta</MenuItem>
+                                    {responseTypes.map((type) => (
+                                        <MenuItem key={type.id} value={type.id}>{type.namePatterns}</MenuItem>
+                                    ))}
                                 </Select>
                                 <Box marginTop={2}>
-                                    {renderResponseField(question.responseType)}
+                                    {renderResponseField(question)}
                                 </Box>
                                 </Grid>
                             </Grid>

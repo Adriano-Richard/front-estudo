@@ -10,11 +10,11 @@ import * as yup from "yup";
 
 interface IFormData{
     name: string;
-    questionCount: number;
+    questionCount?: number;
 }
 const formValidationSchema: yup.Schema<IFormData> = yup.object().shape({
     name: yup.string().required().min(3),
-    questionCount: yup.number().required(),
+    questionCount: yup.number(),
 });
 
 export const DetalheDeAvaliacoes: React.FC = () => {
@@ -25,57 +25,60 @@ export const DetalheDeAvaliacoes: React.FC = () => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [nome, setNome] = useState('');
+    const [originalNome, setOriginalNome] = useState('')
 
     const handleSave = (dados: IFormData) => {
-
-        formValidationSchema.
-            validate(dados, { abortEarly: false })
-            .then((dadosValidados) => {
+        formValidationSchema
+            .validate(dados, { abortEarly: false })
+            .then(async (dadosValidados) => {
                 setIsLoading(true);
-        
-                if(id === 'nova'){
-                    AvaliationService
-                        .create(dadosValidados)
-                        .then((result) => {
-                            setIsLoading(false);
-                            if (result instanceof Error) {
-                                alert(result.message);
+                
+                try {
+                    if (id === 'nova') {
+                        const result = await AvaliationService.create(dadosValidados);
+                        setIsLoading(false);
+    
+                        if (result instanceof Error) {
+                            alert(result.message);
+                        } else {
+                            if (isSaveAndClose()) {
+                                navigate('/avaliacioes');
                             } else {
+                                navigate(`/avaliacoes/detalhe/${result}`);
+                            }
+                        }
+                    } else {
+                        if (nome !== originalNome) {
+                            const updateNameResult = await AvaliationService.updateName(originalNome, nome);
+                            if (updateNameResult instanceof Error) {
+                                alert(updateNameResult.message);
+                                setIsLoading(false);
+                                return;
+                            } else{
                                 if (isSaveAndClose()) {
-                                    navigate('/avaliation');
-                                } else {
-                                    navigate(`/avaliation/detalhe/${result}`);
+                                    navigate('/avaliacoes');
+                                } else{
+                                     navigate(`/avaliacoes/detalhe/${nome}`);
                                 }
                             }
-                        });
-                }   else {
-                        AvaliationService
-                            .updateById(Number(id), dadosValidados)
-                            .then((result) => {
-                                setIsLoading(false);
-                                if (result instanceof Error) {
-                                    alert(result.message);
-                                } else {
-                                    if (isSaveAndClose()) {
-                                        navigate('/avaliation');
-                                    }
-                                }
-                            });
+                        }
                     }
+                } catch (error) {
+                    alert('Ocorreu um erro ao salvar.');
+                    setIsLoading(false);
+                }
             })
             .catch((errors: yup.ValidationError) => {
                 const ValidationErrors: IVFormErros = {};
-
+    
                 errors.inner.forEach(error => {
                     if (!error.path) return;
-
+    
                     ValidationErrors[error.path] = error.message;
                 });
                 console.log(ValidationErrors);
                 formRef.current?.setErrors(ValidationErrors);
-            })
-
-        
+            });
     };
 
 
@@ -90,8 +93,15 @@ export const DetalheDeAvaliacoes: React.FC = () => {
                         alert(result.message);
                         navigate('/avaliacoes');
                     } else {
-                        setNome(result.name);
-                        formRef.current?.setData(result);
+                        const dados = Array.isArray(result) ? result[0] : result;
+
+                        if (dados) {
+                            setNome(dados.name);
+                            setOriginalNome(dados.name);
+                            if (formRef.current) {
+                                formRef.current.setData(dados);
+                            }
+                        }
                     }
                 });
         } else {
@@ -124,7 +134,7 @@ export const DetalheDeAvaliacoes: React.FC = () => {
             )}
             <p>Detalhe de Avaliações {id}</p>
 
-            <VForm ref={formRef} onSubmit={handleSave}>
+            <VForm ref={formRef} onSubmit={handleSave}  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 <Box margin={1} display="flex" flexDirection="column" component={Paper} variant="outlined">
                     <Grid container direction="column" padding={2} spacing={2}>
                         
