@@ -1,14 +1,12 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { VForm, useVForm} from "../../forms";
 import { LayoutBaseDePagina } from "../../layouts";
 import { FerramentasDeDetalhe } from "../../components";
-import { useEffect, useState } from "react";
-import { AvaliationService } from "../../services/avaliations/AvaliationService";
-import { Box, Button, FormControl, FormControlLabel, FormLabel, Grid, IconButton, LinearProgress, MenuItem, Paper, Radio, RadioGroup, Select, TextField, Typography } from "@mui/material";
-import { VTextField, VForm, useVForm, IVFormErros } from "../../forms";
-import * as yup from "yup";
+import { useNavigate, useParams } from "react-router-dom";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { Delete, ContentCopy, StarBorder, Star } from "@mui/icons-material";
 import { ResponseOptionsService } from "../../services/response-options/ResponseOptionsService";
+import { Box, Button, Grid, IconButton, LinearProgress, MenuItem, Paper, Select, TextField, Typography } from "@mui/material";
+import QuestionList from "./RenderResponseField/QuestionList";
 
 //Criar arquivos para as interfaces e classes
 interface IFormData{
@@ -24,7 +22,7 @@ export type Question = {
     responseOptions?: string[];
   };
 
-interface IResponseOption {
+export interface IResponseOption {
     id: number;
     namePatterns?: string;
     responses?: string[];
@@ -61,7 +59,7 @@ export const DetalheDeQuestoes: React.FC = () => {
         setQuestions(updatedQuestions);
       };
 
-    const handleResponseTypeChange = (index: number, value: number) => {
+    const handleResponseTypeChange = (index: number, value: number | null) => {
         const updatedQuestions = [...questions];
         const selectedType = responseTypes.find((type) => type.id === value);
 
@@ -79,42 +77,7 @@ export const DetalheDeQuestoes: React.FC = () => {
         setQuestions(reorderedQuestions);
     };
 
-    const renderResponseField = (question: Question) => {
-        const selectedType = responseTypes.find((type) => type.id === question.responseTypeId);
-
-        if (!selectedType) return null;
-
-        switch (selectedType.namePatterns) {
-            case 'Text':
-                return <TextField fullWidth placeholder="Resposta do usuário" />;
-            case 'DropDown':
-                return (
-                    <Select fullWidth displayEmpty>
-                        <MenuItem value="" disabled>Selecione uma opção</MenuItem>
-                        {question.responseOptions?.map((option, index) => (
-                            <MenuItem key={index} value={option}>{option}</MenuItem>
-                        ))}
-                    </Select>
-                );
-            case 'RadioButton':
-                return (
-                    <FormControl>
-                        <FormLabel>Selecione uma opção</FormLabel>
-                        <RadioGroup row>
-                            {question.responseOptions?.map((option, index) => (
-                                <FormControlLabel key={index} value={option} control={<Radio />} label={option} />
-                            ))}
-                        </RadioGroup>
-                    </FormControl>
-                );
-            default:
-                return null;
-        }
-    };
-
-
     const handleSave = (dados: IFormData) => {
-
         
     };
 
@@ -139,7 +102,7 @@ export const DetalheDeQuestoes: React.FC = () => {
                 setIsLoading(false);
                 if (result instanceof Error) {
                     alert(result.message);
-                    navigate('/');
+                    //navigate('/');
                 } else {
                     setResponseTypes(result.data);
                 }
@@ -181,77 +144,20 @@ export const DetalheDeQuestoes: React.FC = () => {
 
             <DragDropContext onDragEnd={handleDragEnd}>
                 <Droppable droppableId="questions">
-                {(provided) => (
-                    <div {...provided.droppableProps} ref={provided.innerRef}>
-                    {questions.map((question, index) => (
-                        <Draggable key={question.id} draggableId={question.id} index={index}>
-                        {(provided) => (
-                            <Box 
-                            margin={1} 
-                            display="flex" 
-                            flexDirection="column" 
-                            component={Paper} 
-                            variant="outlined"
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            >
-                            <Grid container direction="column" padding={2} spacing={2}>
-                                <Grid item>
-                                <Box display="flex" alignItems="center" justifyContent="space-between">
-                                    <Box display="flex" alignItems="center" marginBottom={2}>
-                                        <Typography variant="subtitle1" marginRight={2}>
-                                            Questão {index + 1}
-                                        </Typography>
-                                        <IconButton onClick={() => toggleRequired(index)}>
-                                            {question.isRequired ? (
-                                            <Star style={{ color: 'red' }} fontSize="small" />
-                                            ) : (
-                                            <StarBorder fontSize="small" />
-                                            )}
-                                        </IconButton>
-                                        <Typography variant="body2" sx={{ marginLeft: 1 }}>
-                                            {question.isRequired ? "Obrigatória" : "Opcional"}
-                                        </Typography>
-                                    </Box>
-                                    <Box marginBottom={2}>
-                                        <IconButton onClick={() => handleRemoveQuestion(index)}>
-                                            <Delete />
-                                        </IconButton>
-                                        <IconButton onClick={() => handleDuplicateQuestion(index)}>
-                                            <ContentCopy />
-                                        </IconButton>
-                                    </Box>
-                                </Box>
-                                <TextField
-                                    fullWidth
-                                    label="Título da Questão"
-                                    value={question.title}
-                                    onChange={(e) => handleTitleChange(index, e.target.value)}
-                                    sx={{ marginBottom: 2 }}
-                                />
-                                <Select
-                                    fullWidth
-                                    value={question.responseTypeId || ''}
-                                    onChange={(e) => handleResponseTypeChange(index, Number(e.target.value))}
-                                >
-                                    <MenuItem value="" disabled>Selecione o tipo de resposta</MenuItem>
-                                    {responseTypes.map((type) => (
-                                        <MenuItem key={type.id} value={type.id}>{type.namePatterns}</MenuItem>
-                                    ))}
-                                </Select>
-                                <Box marginTop={2}>
-                                    {renderResponseField(question)}
-                                </Box>
-                                </Grid>
-                            </Grid>
-                            </Box>
-                        )}
-                        </Draggable>
-                    ))}
-                    {provided.placeholder}
-                    </div>
-                )}
+                    {(provided) => (
+                        <div {...provided.droppableProps} ref={provided.innerRef}>
+                            <QuestionList
+                                questions={questions}
+                                responseTypes={responseTypes}
+                                onTitleChange={handleTitleChange}
+                                onResponseTypeChange={handleResponseTypeChange}
+                                onRemove={handleRemoveQuestion}
+                                onDuplicate={handleDuplicateQuestion}
+                                toggleRequired={toggleRequired}
+                            />
+                            {provided.placeholder}
+                        </div>
+                    )}
                 </Droppable>
             </DragDropContext>
             <VForm ref={formRef} onSubmit={handleSave}>

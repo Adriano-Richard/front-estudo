@@ -1,5 +1,5 @@
 {
-    "avaliation": [
+    "Avaliation": [
         {
             "id":1,
             "name": "Avaliação",
@@ -13,5 +13,10 @@
     ],
     "auth": {
         "accesstoken": "aaaaaaaaaaaaaa.bbbbbbbbbbbbbbb.ccccccccccc"
-    }
+    },
+    "ResponseOptions": [{
+        "id": 1,
+        "namePatterns": "Text",
+        "responses": []
+    }]
 }
