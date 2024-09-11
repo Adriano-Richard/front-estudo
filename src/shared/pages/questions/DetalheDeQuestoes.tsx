@@ -16,7 +16,7 @@ interface IFormData{
     questionCount: number;
 }
 
-type Question = {
+export type Question = {
     id: string;
     title: string;
     responseTypeId: number | null;
@@ -24,7 +24,7 @@ type Question = {
     responseOptions?: string[];
   };
 
-  interface IResponseOption {
+interface IResponseOption {
     id: number;
     namePatterns?: string;
     responses?: string[];
