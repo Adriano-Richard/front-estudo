@@ -1,8 +1,9 @@
 import { Outlet, createBrowserRouter } from "react-router-dom";
-import { Dashboard, DetalheDeAvaliacoes, DetalheDeQuestoes, ListagemDeAvaliacoes, UserProfile } from "../shared/pages";
-import { Login, MenuLateral } from "../shared/components";
+import { Dashboard, DetalheDeAvaliacoes, DetalheDeQuestoes, ListagemDeAvaliacoes, Login, UserProfile } from "../shared/pages";
+import { MenuLateral } from "../shared/components";
 import { CompactProvider, UseDrawerContext } from "../shared/contexts";
 import { useEffect } from "react";
+import Cadastro from "../shared/pages/login/cadastro/Cadastro";
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +31,14 @@ export const router = createBrowserRouter([
         element: <DetalheDeQuestoes />,
       },
     ],
+  },
+  {
+    path: "/login",
+    element: <Login children={undefined} />,
+  },
+  {
+    path: "/cadastro",
+    element: <Cadastro />, // Adicionando rota de cadastro
   }
 ]);
 
@@ -59,7 +68,6 @@ function Layout() {
   return (
     <Login>
       <CompactProvider>
-
         <MenuLateral>
           <Outlet />
         </MenuLateral>
