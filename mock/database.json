@@ -18,5 +18,245 @@
         "id": 1,
         "namePatterns": "Text",
         "responses": []
-    }]
+    }],
+    "Occupations": [
+        "Aluno",
+        "Professor",
+        "TecnicoAdministrativo",
+        "Coordenador",
+        "Egresso",
+        "Gestor"
+    ],
+    "Question": [
+        {
+            "Id": 1,
+            "Text": "Qual é a sua opinião sobre o ensino à distância?",
+            "Description": "Esta pergunta avalia a satisfação dos alunos com o ensino remoto.",
+            "Expectativa": 4,
+            "ResponseOptionId": 3,
+            "AvaliationId": 1,
+            "AllowedOccupations": ["Aluno", "Professor"]
+        },
+        {
+            "Id": 2,
+            "Text": "Como você avalia os recursos disponíveis para o ensino prático?",
+            "Description": "Avaliação dos laboratórios e equipamentos oferecidos pela instituição.",
+            "Expectativa": 3,
+            "ResponseOptionId": 3,
+            "AvaliationId": 1,
+            "AllowedOccupations": ["Professor", "TecnicoAdministrativo", "Gestor"]
+        },
+        {
+            "Id": 3,
+            "Text": "Quão satisfeito você está com o atendimento administrativo?",
+            "Description": "Avaliação da eficiência no atendimento realizado pelo corpo administrativo.",
+            "Expectativa": 5,
+            "ResponseOptionId": 3,
+            "AvaliationId": 3,
+            "AllowedOccupations": ["Aluno", "TecnicoAdministrativo", "Gestor", "Coordenador"]
+        },
+        {
+            "Id": 4,
+            "Text": "Qual o nível de conhecimento técnico adquirido no último semestre?",
+            "Description": "Pergunta focada na percepção de aprendizado técnico por parte dos alunos.",
+            "Expectativa": 5,
+            "ResponseOptionId": 3,
+            "AvaliationId": 2,
+            "AllowedOccupations": ["Aluno", "Egresso"]
+        }
+    ],
+    "University": [
+        {
+            "Id": "1d2d4e2f-45b6-4bb6-aec2-1f2e58977f45",
+            "Name": "Universidade Federal do Tocantins",
+            "Sigla": "UFT"
+        },
+        {
+            "Id": "2a3b4c5d-56e7-4df8-bbc9-2f3a6d7e8f90",
+            "Name": "Universidade Federal de Goiás",
+            "Sigla": "UFG"
+        },
+        {
+            "Id": "3b4c5d6e-67f8-4e09-bbc9-3e4a7f8e9f01",
+            "Name": "Universidade Federal de Mato Grosso do Sul",
+            "Sigla": "UFMS"
+        },
+        {
+            "Id": "4c5d6e7f-78g9-4f1a-bbd9-4f5a8f9e0f12",
+            "Name": "Universidade Federal da Grande Dourados",
+            "Sigla": "UFGD"
+        },
+        {
+            "Id": "5d6e7f8g-89h0-4g2b-bbd9-5g6b9f0f1g23",
+            "Name": "Universidade Federal de Sergipe",
+            "Sigla": "UFS"
+        },
+        {
+            "Id": "6e7f8g9h-90i1-4h3c-bbd9-6h7c0g1h2h34",
+            "Name": "Universidade Federal de Alagoas",
+            "Sigla": "UFAL"
+        },
+        {
+            "Id": "7f8g9h0i-01j2-4i4d-bbd9-7i8d1g2i3j45",
+            "Name": "Universidade Federal de Campina Grande",
+            "Sigla": "UFCG"
+        },
+        {
+            "Id": "8g9h0i1j-12k3-4j5e-bbd9-8j9e2g3j4k56",
+            "Name": "Universidade Federal Rural do Semi-Árido",
+            "Sigla": "UFERSA"
+        },
+        {
+            "Id": "9h0i1j2k-23l4-4k6f-bbd9-9k0f3g4k5l67",
+            "Name": "Universidade Federal Rural de Pernambuco",
+            "Sigla": "UFRPE"
+        },
+        {
+            "Id": "0i1j2k3l-34m5-4l7g-bbd9-0l1g4g5l6m78",
+            "Name": "Universidade Federal do Vale do São Francisco",
+            "Sigla": "UNIVASF"
+        },
+        {
+            "Id": "1j2k3l4m-45n6-4m8h-bbd9-1m2h5g6m7n89",
+            "Name": "Universidade Federal do Piauí",
+            "Sigla": "UFPI"
+        },
+        {
+            "Id": "2k3l4m5n-56o7-4n9i-bbd9-2n3i6g7n8o90",
+            "Name": "Universidade Federal de Rondônia",
+            "Sigla": "UNIR"
+        },
+        {
+            "Id": "3l4m5n6o-67p8-4o0j-bbd9-3o4j7g8o9p01",
+            "Name": "Universidade Federal de Viçosa",
+            "Sigla": "UFV"
+        },
+        {
+            "Id": "4m5n6o7p-78q9-4p1k-bbd9-4p5k8g9p0q12",
+            "Name": "Universidade Federal de Alfenas",
+            "Sigla": "UNIFAL"
+        },
+        {
+            "Id": "5n6o7p8q-89r0-4q2l-bbd9-5q6l9g0q1r23",
+            "Name": "Universidade Federal de Juiz de Fora",
+            "Sigla": "UFJF"
+        },
+        {
+            "Id": "6o7p8q9r-90s1-4r3m-bbd9-6r7m0g1r2s34",
+            "Name": "Universidade Federal de São João Del Rei",
+            "Sigla": "UFSJ"
+        },
+        {
+            "Id": "7p8q9r0s-01t2-4s4n-bbd9-7s8n1g2s3t45",
+            "Name": "Universidade Federal do Triângulo Mineiro",
+            "Sigla": "UFTM"
+        },
+        {
+            "Id": "8q9r0s1t-12u3-4t5o-bbd9-8t9o2g3t4u56",
+            "Name": "Universidade Federal Fluminense",
+            "Sigla": "UFF"
+        },
+        {
+            "Id": "9r0s1t2u-23v4-4u6p-bbd9-9u0p3g4u5v67",
+            "Name": "Universidade Federal do Rio Grande",
+            "Sigla": "FURG"
+        },
+        {
+            "Id": "0s1t2u3v-34w5-4v7q-bbd9-0v1q4g5v6w78",
+            "Name": "Universidade Federal de Pelotas",
+            "Sigla": "UFPel"
+        },
+        {
+            "Id": "1t2u3v4w-45x6-4w8r-bbd9-1w2r5g6w7x89",
+            "Name": "Universidade Tecnológica Federal do Paraná",
+            "Sigla": "UTFPR"
+        }
+    ],
+    "Network": [
+        {
+            "Id": "d1a2b3c4-5e6f-7g8h-9i10-jk11lm12no13",
+            "Name": "Mestrado Profissional Em Administração Pública",
+            "Sigla": "PROFIAP"
+        }
+    ],
+    "Title": [
+        "Graduado",
+        "Especialista",
+        "Mestre",
+        "Doutor"
+    ],
+    "ExperienceLevels": [
+        {
+            "id": 0,
+            "name": "NoExperience",
+            "description": "Não atuo"
+        },
+        {
+            "id": 1,
+            "name": "Between5And10Years",
+            "description": "Entre 5 e 10 anos"
+        },
+        {
+            "id": 2,
+            "name": "UpTo2Years",
+            "description": "Até 2 anos"
+        },
+        {
+            "id": 3,
+            "name": "Between2And5Years",
+            "description": "Entre 2 e 5 anos"
+        },
+        {
+            "id": 4,
+            "name": "Between10And15Years",
+            "description": "Entre 10 e 15 anos"
+        },
+        {
+            "id": 5,
+            "name": "Above15Years",
+            "description": "Acima de 15 anos"
+        }
+    ],
+    "AgeGroups": [
+        {
+            "id": 0,
+            "name": "UpTo25Years",
+            "description": "Até 25 anos"
+        },
+        {
+            "id": 1,
+            "name": "Between25And35Years",
+            "description": "Entre 25 e 35 anos"
+        },
+        {
+            "id": 2,
+            "name": "Between35And45Years",
+            "description": "Entre 35 e 45 anos"
+        },
+        {
+            "id": 3,
+            "name": "Above45Years",
+            "description": "Acima de 45 anos"
+        }
+    ],
+    "User": {
+        "Id": "a1b2c3d4-e5f6-7890-ab12-cdef34567890",
+        "CPF": "123.456.789-00",
+        "UserName": "usuario123",
+        "Password": "hashed_password",
+        "Role": "Admin",
+        "UniversityId": "f1g2h3i4-j5k6-l7m8-n9o0-pq12rst34567",
+        "Cargo": "Professor",
+        "Idade": {
+            "id": 2,
+            "name": "Between35And45Years",
+            "description": "Entre 35 e 45 anos"
+        },
+        "Titulo": "Doutor",
+        "TempoDeTrabalho": {
+            "id": 4,
+            "name": "Between10And15Years",
+            "description": "Entre 10 e 15 anos"
+        }
+    }
 }
