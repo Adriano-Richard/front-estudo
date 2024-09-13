@@ -16,7 +16,6 @@ return (
         <Grid item xs={12} sm={10} md={6} lg={4} xl={3}>
           <Card>
             <CardContent>
-                {/* Conteúdo do formulário de cadastro */}
                 <div >
                     <Avatar >
                     

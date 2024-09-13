@@ -1,25 +1,44 @@
 import { Interface } from "readline/promises";
 import { Environment } from "../../environment";
 import { Api } from "../axios-config";
+import { IListResponseOptions } from "../response-options/ResponseOptionsService";
 
 
 export interface IQuestion {
-    id: string;
-    title: string;
-    responseTypeId: number | null;
+    id: number;
+    text: string;
+    description: string;
+    expectativa: number;
+    ResponseOptionId: number | null;
+    avaliationId: number
     isRequired: boolean;
-    responseOptions?: string[];
+    responseOptions?: IListResponseOptions;
   };
 
 export interface IQuestionCreate extends IQuestion {
     avaliationId: number;
 }
 
-interface IResponseOption {
-    id: number;
-    namePatterns?: string;
-    responses?: string[];
+type TQuestions = {
+    data: IListResponseOptions[];
 }
+
+const getAll = async (): Promise<TQuestions | Error> => {
+    try {
+        const urlRelativa = `/Question`;
+
+        const { data } = await Api.get(urlRelativa);
+
+        if (data) {
+            return{
+                data
+            }
+        }
+        return new Error('Erro ao listar os registros.');
+    } catch (error) {
+        return new Error((error as { message: string }).message || 'Erro ao listar os registros.');
+    }
+};
 
 
 const updateName = async(name: string, newAvaliationName: string): Promise<void | Error> => {
@@ -66,4 +85,5 @@ export const QuestionService = {
     updateName,
     getAvaliationVerify,
     create,
+    getAll
 };

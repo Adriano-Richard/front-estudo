@@ -15,17 +15,35 @@
         "accesstoken": "aaaaaaaaaaaaaa.bbbbbbbbbbbbbbb.ccccccccccc"
     },
     "ResponseOptions": [{
-        "id": 1,
-        "namePatterns": "Text",
-        "responses": []
+        "id": 3,
+        "namePatterns": "RadioButton",
+        "responses": ["Muito insatisfeito", "Insatisfeito", "Neutro", "Satisfeito", "Muito satisfeito"]
     }],
     "Occupations": [
-        "Aluno",
-        "Professor",
-        "TecnicoAdministrativo",
-        "Coordenador",
-        "Egresso",
-        "Gestor"
+        {
+        "id": 1,
+        "name": "Aluno"
+        },
+        {
+        "id": 2,
+        "name": "Professor"
+        },
+        {
+        "id": 3,
+        "name": "TecnicoAdministrativo"
+        },
+        {
+        "id": 4,
+        "name": "Coordenador"
+        },
+        {
+        "id": 5,
+        "name": "Egresso"
+        },
+        {
+        "id": 6,
+        "name": "Gestor"
+        }
     ],
     "Question": [
         {
@@ -34,6 +52,11 @@
             "Description": "Esta pergunta avalia a satisfação dos alunos com o ensino remoto.",
             "Expectativa": 4,
             "ResponseOptionId": 3,
+            "ResponseOptions": {
+                "id": 3,
+                "namePatterns": "RadioButton",
+                "responses": ["Muito insatisfeito", "Insatisfeito", "Neutro", "Satisfeito", "Muito satisfeito"]
+            },
             "AvaliationId": 1,
             "AllowedOccupations": ["Aluno", "Professor"]
         },
@@ -180,10 +203,22 @@
         }
     ],
     "Title": [
-        "Graduado",
-        "Especialista",
-        "Mestre",
-        "Doutor"
+        {
+        "id": 1,
+        "name": "Graduado"
+        },
+        {
+        "id": 2,
+        "name": "Especialista"
+        },
+        {
+        "id": 3,
+        "name": "Mestre"
+        },
+        {
+        "id": 4,
+        "name": "Doutor"
+        }
     ],
     "ExperienceLevels": [
         {

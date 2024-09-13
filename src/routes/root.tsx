@@ -4,6 +4,7 @@ import { MenuLateral } from "../shared/components";
 import { CompactProvider, UseDrawerContext } from "../shared/contexts";
 import { useEffect } from "react";
 import Cadastro from "../shared/pages/login/cadastro/Cadastro";
+import { ListagemDeUniversidades } from "../shared/pages/universities/ListagemDeUniversidades";
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
         path: "/questoes/detalhe",
         element: <DetalheDeQuestoes />,
       },
+      {
+        path: "/universidades",
+        element: <ListagemDeUniversidades />
+      }
     ],
   },
   {
@@ -62,6 +67,11 @@ function Layout() {
           icon: 'bookmark',
           path: '/questoes/detalhe',
           label: 'Questões',
+        },
+        {
+          icon: 'book',
+          path: '/universidades',
+          label: 'Universades',
         }
       ]);
     }, []);
