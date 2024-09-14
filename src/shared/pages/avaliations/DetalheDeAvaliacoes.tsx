@@ -3,9 +3,11 @@ import { LayoutBaseDePagina } from "../../layouts";
 import { FerramentasDeDetalhe } from "../../components";
 import { useEffect, useState } from "react";
 import { AvaliationService } from "../../services/avaliations/AvaliationService";
-import { Box, Grid, LinearProgress, Paper, Typography } from "@mui/material";
+import { Box, Grid, LinearProgress, Paper, Tab, Tabs, Typography } from "@mui/material";
 import { VTextField, VForm, useVForm, IVFormErros } from "../../forms";
 import * as yup from "yup";
+import { DetalheDeQuestoes } from "../questions/DetalheDeQuestoes";
+import { RenderQuestion } from "../questions/RenderQuestions/RenderQuestions";
 
 
 interface IFormData{
@@ -20,12 +22,17 @@ const formValidationSchema: yup.Schema<IFormData> = yup.object().shape({
 export const DetalheDeAvaliacoes: React.FC = () => {
     const { id = 'nova' } = useParams<'id'>();
     const navigate = useNavigate();
+    const [activeTab, setActiveTab] = useState(0);
 
     const { formRef, save, saveAndClose, isSaveAndClose } = useVForm();
 
     const [isLoading, setIsLoading] = useState(false);
     const [nome, setNome] = useState('');
     const [originalNome, setOriginalNome] = useState('')
+
+    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+        setActiveTab(newValue);
+      };
 
     const handleSave = (dados: IFormData) => {
         formValidationSchema
@@ -132,35 +139,45 @@ export const DetalheDeAvaliacoes: React.FC = () => {
             {isLoading &&(
                 <LinearProgress variant="indeterminate" />
             )}
-            <p>Detalhe de Avaliações {id}</p>
+            <Tabs value={activeTab} onChange={handleTabChange}>
+                <Tab label="Detalhes da Avaliação" />
+                <Tab label="Questões" />
+            </Tabs>
+            {activeTab === 0 && (
+                <VForm ref={formRef} onSubmit={handleSave}  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                    <Box margin={1} display="flex" flexDirection="column" component={Paper} variant="outlined">
+                        <Grid container direction="column" padding={2} spacing={2}>
+                            
+                            {isLoading &&(
+                                <Grid item>
+                                    <LinearProgress variant="indeterminate" />
+                                </Grid>
+                            )}
 
-            <VForm ref={formRef} onSubmit={handleSave}  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                <Box margin={1} display="flex" flexDirection="column" component={Paper} variant="outlined">
-                    <Grid container direction="column" padding={2} spacing={2}>
-                        
-                        {isLoading &&(
                             <Grid item>
-                                <LinearProgress variant="indeterminate" />
+                                <Typography variant="h6">Geral</Typography>
                             </Grid>
-                        )}
-
-                        <Grid item>
-                            <Typography variant="h6">Geral</Typography>
-                        </Grid>
-                        <Grid container item direction="row" spacing={2}>
-                            <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                                <VTextField
-                                    fullWidth
-                                    disabled={isLoading}
-                                    label="Nome"
-                                    name='name'
-                                    onChange={e => setNome(e.target.value)}
-                                />
+                            <Grid container item direction="row" spacing={2}>
+                                <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                                    <VTextField
+                                        fullWidth
+                                        disabled={isLoading}
+                                        label="Nome"
+                                        name='name'
+                                        onChange={e => setNome(e.target.value)}
+                                    />
+                                </Grid>
                             </Grid>
                         </Grid>
-                    </Grid>
+                    </Box>
+                </VForm>
+            )}
+            {activeTab === 1 && (
+                <Box margin={1} display="flex" flexDirection="column" component={Paper} variant="outlined" padding={2}>
+                <Typography variant="h6">Questões da Avaliação</Typography>
+                <RenderQuestion id={parseInt(id)} handleSave={handleSave} />
                 </Box>
-            </VForm>
+            )}
         </LayoutBaseDePagina>
     );
 }

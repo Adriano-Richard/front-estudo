@@ -70,14 +70,14 @@ export const ListagemDeUniversidades: React.FC = () => {
                     </TableHead>
                     <TableBody>
                         {rows.map(row => (
-                            <TableRow key={row.Name}>
-                                <TableCell>{row.Name}</TableCell>
-                                <TableCell>{row.Sigla}</TableCell>
+                            <TableRow key={row.name}>
+                                <TableCell>{row.name}</TableCell>
+                                <TableCell>{row.sigla}</TableCell>
                                 <TableCell>
                                     <IconButton sx={{ mr: 2 }}>
                                         <Icon>delete</Icon>
                                     </IconButton>
-                                    <IconButton onClick={() => navigate(`/universidades/detalhe/${row.Name}`)}>
+                                    <IconButton onClick={() => navigate(`/universidades/detalhe/${row.name}`)}>
                                         <Icon>edit</Icon>
                                     </IconButton>
                                 </TableCell>

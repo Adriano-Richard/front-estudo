@@ -55,7 +55,11 @@ const getAvaliationVerify = async(name: string): Promise<boolean | Error> => {
 
 const getAll = async (page = 1, filter = ''): Promise<TAvaliationsComTotalCount | Error> => {
     try {
-        const urlRelativa = `/Avaliation?pageNumber=${page}`;
+        var urlRelativa = `/Avaliation?pageNumber=${page}`;
+
+        if (filter){
+            urlRelativa += `&name=${filter}`;
+        }
 
         const { data, headers } = await Api.get(urlRelativa);
 

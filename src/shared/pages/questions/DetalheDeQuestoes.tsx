@@ -7,9 +7,10 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { ResponseOptionsService } from "../../services/response-options/ResponseOptionsService";
 import { Box, Button, Grid, IconButton, LinearProgress, MenuItem, Paper, Select, TextField, Typography } from "@mui/material";
 import QuestionList from "./RenderResponseField/QuestionList";
+import { RenderQuestion } from "./RenderQuestions/RenderQuestions";
 
 //Criar arquivos para as interfaces e classes
-interface IFormData{
+export interface IFormData{
     name: string;
     questionCount: number;
 }
@@ -130,49 +131,7 @@ export const DetalheDeQuestoes: React.FC = () => {
             {isLoading &&(
                 <LinearProgress variant="indeterminate" />
             )}
-            <Box display="flex" alignItems="center" mb={2}>
-                <Typography variant="h6">Detalhe de Questões {id}</Typography>
-                <Button 
-                variant="contained" 
-                color="primary" 
-                onClick={handleAddQuestion}
-                sx={{ marginLeft: 2 }}
-                >
-                Adicionar Box
-                </Button>
-            </Box>
-
-            <DragDropContext onDragEnd={handleDragEnd}>
-                <Droppable droppableId="questions">
-                    {(provided) => (
-                        <div {...provided.droppableProps} ref={provided.innerRef}>
-                            <QuestionList
-                                questions={questions}
-                                responseTypes={responseTypes}
-                                onTitleChange={handleTitleChange}
-                                onResponseTypeChange={handleResponseTypeChange}
-                                onRemove={handleRemoveQuestion}
-                                onDuplicate={handleDuplicateQuestion}
-                                toggleRequired={toggleRequired}
-                            />
-                            {provided.placeholder}
-                        </div>
-                    )}
-                </Droppable>
-            </DragDropContext>
-            <VForm ref={formRef} onSubmit={handleSave}>
-                <Grid container spacing={2} mt={2}>
-                <Grid item xs={12} md={6}>
-                    <TextField
-                    fullWidth
-                    name="questionCount"
-                    disabled={true}
-                    label="Quantidade de Questões"
-                    value={questions.length}
-                    />
-                </Grid>
-                </Grid>
-            </VForm>
+            <RenderQuestion id={parseInt(id)} handleSave={handleSave} />
         </LayoutBaseDePagina>
     );
 }

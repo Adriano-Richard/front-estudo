@@ -3,8 +3,8 @@ import { Api } from "../axios-config";
 
 export interface IListUniversity {
     id: string;
-    Name: string;
-    Sigla: string;
+    name: string;
+    sigla: string;
 }
 
 type TUniversities = {
@@ -14,7 +14,10 @@ type TUniversities = {
 
 const getAll = async (page = 1, filter = ''): Promise<TUniversities | Error> => {
     try {
-        const urlRelativa = `/University?pageNumber=${page}`;
+        var urlRelativa = `/University?pageNumber=${page}`;
+        if (filter){
+            urlRelativa += `&name=${filter}`;
+        }
 
         const { data, headers } = await Api.get(urlRelativa);
 
