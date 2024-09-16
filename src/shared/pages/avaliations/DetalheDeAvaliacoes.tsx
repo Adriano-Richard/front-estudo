@@ -8,6 +8,7 @@ import { VTextField, VForm, useVForm, IVFormErros } from "../../forms";
 import * as yup from "yup";
 import { DetalheDeQuestoes } from "../questions/DetalheDeQuestoes";
 import { RenderQuestion } from "../questions/RenderQuestions/RenderQuestions";
+import { QuestionService } from "../../services/questions/QuestionService";
 
 
 interface IFormData{
@@ -29,30 +30,30 @@ export const DetalheDeAvaliacoes: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [nome, setNome] = useState('');
     const [originalNome, setOriginalNome] = useState('')
+    const [questions, setQuestions] = useState([]);
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setActiveTab(newValue);
       };
 
-    const handleSave = (dados: IFormData) => {
+      const handleSave = (dados: IFormData) => {
         formValidationSchema
             .validate(dados, { abortEarly: false })
             .then(async (dadosValidados) => {
                 setIsLoading(true);
                 
                 try {
+                    let avaliationId: number; // Definindo a variável avaliationId
+
                     if (id === 'nova') {
-                        const result = await AvaliationService.create(dadosValidados);
+                        const result = await AvaliationService.create(dadosValidados.name);
                         setIsLoading(false);
     
                         if (result instanceof Error) {
                             alert(result.message);
+                            return;
                         } else {
-                            if (isSaveAndClose()) {
-                                navigate('/avaliacioes');
-                            } else {
-                                navigate(`/avaliacoes/detalhe/${result}`);
-                            }
+                            avaliationId = result.id;
                         }
                     } else {
                         if (nome !== originalNome) {
@@ -61,15 +62,29 @@ export const DetalheDeAvaliacoes: React.FC = () => {
                                 alert(updateNameResult.message);
                                 setIsLoading(false);
                                 return;
-                            } else{
-                                if (isSaveAndClose()) {
-                                    navigate('/avaliacoes');
-                                } else{
-                                     navigate(`/avaliacoes/detalhe/${nome}`);
-                                }
+                            } else {
+                                avaliationId = Number(id);
                             }
+                        } else {
+                            avaliationId = Number(id);
                         }
                     }
+
+                    // Salvando as perguntas associadas à avaliação
+                    const saveQuestionsResult = await QuestionService.create(avaliationId, questions);
+                    if (saveQuestionsResult instanceof Error) {
+                        alert(saveQuestionsResult.message);
+                        setIsLoading(false);
+                        return;
+                    }
+
+                    // Redirecionando após salvar
+                    if (isSaveAndClose()) {
+                        navigate('/avaliacoes');
+                    } else {
+                        navigate(`/avaliacoes/detalhe/${avaliationId}`);
+                    }
+
                 } catch (error) {
                     alert('Ocorreu um erro ao salvar.');
                     setIsLoading(false);
@@ -77,10 +92,10 @@ export const DetalheDeAvaliacoes: React.FC = () => {
             })
             .catch((errors: yup.ValidationError) => {
                 const ValidationErrors: IVFormErros = {};
-    
+
                 errors.inner.forEach(error => {
                     if (!error.path) return;
-    
+
                     ValidationErrors[error.path] = error.message;
                 });
                 console.log(ValidationErrors);

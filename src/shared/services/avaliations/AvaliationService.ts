@@ -84,9 +84,9 @@ const updateById = async (id: number, dados: IListAvaliation): Promise<void | Er
     }
 };
 
-const create = async (dados: IListAvaliation): Promise<number | Error> => {
+const create = async (name: string): Promise<number | Error> => {
     try{
-        const { data } = await Api.post('/avaliation/', dados);
+        const { data } = await Api.post('/Avaliation', { name });
         if (data) {
             return data.id;
           }

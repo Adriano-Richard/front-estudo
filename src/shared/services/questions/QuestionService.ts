@@ -67,9 +67,9 @@ const getAvaliationVerify = async(name: string): Promise<boolean | Error> => {
 };
 
 
-const create = async (dados: IQuestionCreate[]): Promise<number | Error> => {
+const create = async (avaliationId: number, questions: IQuestionCreate[]): Promise<number | Error> => {
     try{
-        const { data } = await Api.post('/avaliation/', dados);
+        const { data } = await Api.post('/Question/', {questions}, { headers: { 'Avaliation-Id': avaliationId }});
         if (data) {
             return data.id;
           }
