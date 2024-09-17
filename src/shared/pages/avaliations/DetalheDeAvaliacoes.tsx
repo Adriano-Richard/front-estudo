@@ -1,14 +1,15 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { LayoutBaseDePagina } from "../../layouts";
 import { FerramentasDeDetalhe } from "../../components";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AvaliationService } from "../../services/avaliations/AvaliationService";
 import { Box, Grid, LinearProgress, Paper, Tab, Tabs, Typography } from "@mui/material";
 import { VTextField, VForm, useVForm, IVFormErros } from "../../forms";
 import * as yup from "yup";
-import { DetalheDeQuestoes } from "../questions/DetalheDeQuestoes";
+import { DetalheDeQuestoes, IResponseOption, Question } from "../questions/DetalheDeQuestoes";
 import { RenderQuestion } from "../questions/RenderQuestions/RenderQuestions";
 import { QuestionService } from "../../services/questions/QuestionService";
+import { ResponseOptionsService } from "../../services/response-options/ResponseOptionsService";
 
 
 interface IFormData{
@@ -31,6 +32,12 @@ export const DetalheDeAvaliacoes: React.FC = () => {
     const [nome, setNome] = useState('');
     const [originalNome, setOriginalNome] = useState('')
     const [questions, setQuestions] = useState([]);
+    const [responseOption, setResponseOption] = useState<IResponseOption[]>([]);
+    const questionsRef = useRef<Question[]>(questions);
+
+    useEffect(() => {
+        questionsRef.current = questions; // Atualize o ref quando o estado das questões mudar
+    }, [questions]);
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setActiveTab(newValue);
@@ -131,7 +138,26 @@ export const DetalheDeAvaliacoes: React.FC = () => {
                 name: ''
             });
         }
+
+        setIsLoading(true);
+        ResponseOptionsService.getAll()
+            .then((result) => {
+                setIsLoading(false);
+                if (result instanceof Error) {
+                    alert(result.message);
+                } else {
+                    setResponseOption(result.data); // Armazena responseOption no estado
+                }
+            });
     }, [id]);
+
+    useEffect(() => {
+        if (activeTab === 0) {
+            formRef.current?.setData({
+                name: nome
+            });
+        }
+    }, [activeTab, nome]);
 
     return(
         <LayoutBaseDePagina 
@@ -179,6 +205,7 @@ export const DetalheDeAvaliacoes: React.FC = () => {
                                         disabled={isLoading}
                                         label="Nome"
                                         name='name'
+                                        value={nome}
                                         onChange={e => setNome(e.target.value)}
                                     />
                                 </Grid>
@@ -190,7 +217,7 @@ export const DetalheDeAvaliacoes: React.FC = () => {
             {activeTab === 1 && (
                 <Box margin={1} display="flex" flexDirection="column" component={Paper} variant="outlined" padding={2}>
                 <Typography variant="h6">Questões da Avaliação</Typography>
-                <RenderQuestion id={parseInt(id)} handleSave={handleSave} />
+                <RenderQuestion id={parseInt(id)} handleSave={handleSave} responseOption={responseOption}/>
                 </Box>
             )}
         </LayoutBaseDePagina>

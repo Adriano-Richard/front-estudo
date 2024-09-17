@@ -8,18 +8,21 @@ import { IFormData, IResponseOption, Question } from "../DetalheDeQuestoes";
 interface QuestionDetailProps {
     id: number;
     handleSave: (dados: IFormData) => void;
+    responseOption: IResponseOption[];
 }
 
 export const RenderQuestion: React.FC<QuestionDetailProps> = ({
     id,
     handleSave,
+    responseOption,
 }) => {
     const [questions, setQuestions] = useState<Question[]>([]);
     const { formRef, save, saveAndClose, isSaveAndClose } = useVForm();
-    const [responseTypes, setResponseTypes] = useState<IResponseOption[]>([]);
+
+    
     
     const handleAddQuestion = () => {
-        setQuestions([...questions, { id: `question-${questions.length}`, title: '', responseTypeId: null, isRequired: false }]);
+        setQuestions([...questions, { id: `question-${questions.length}`, text: '', responseOptionId: null, isRequired: false, description: '', expectativa: 0}]);
     }
     const toggleRequired = (index: number) => {
         const updatedQuestions = [...questions];
@@ -29,15 +32,15 @@ export const RenderQuestion: React.FC<QuestionDetailProps> = ({
 
     const handleTitleChange = (index: number, value: string) => {
         const updatedQuestions = [...questions];
-        updatedQuestions[index].title = value;
+        updatedQuestions[index].text = value;
         setQuestions(updatedQuestions);
       };
 
     const handleResponseTypeChange = (index: number, value: number | null) => {
         const updatedQuestions = [...questions];
-        const selectedType = responseTypes.find((type) => type.id === value);
+        const selectedType = responseOption.find((type) => type.id === value);
 
-        updatedQuestions[index].responseTypeId = value;
+        updatedQuestions[index].responseOptionId = value;
         updatedQuestions[index].responseOptions = selectedType ? selectedType.responses : []; // Armazena as opções de resposta, se houver
 
         setQuestions(updatedQuestions);
@@ -83,7 +86,7 @@ export const RenderQuestion: React.FC<QuestionDetailProps> = ({
                         <div {...provided.droppableProps} ref={provided.innerRef}>
                             <QuestionList
                                 questions={questions}
-                                responseTypes={responseTypes}
+                                responseOption={responseOption}
                                 onTitleChange={handleTitleChange}
                                 onResponseTypeChange={handleResponseTypeChange}
                                 onRemove={handleRemoveQuestion}

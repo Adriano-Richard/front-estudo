@@ -9,7 +9,7 @@ export interface IQuestion {
     text: string;
     description: string;
     expectativa: number;
-    ResponseOptionId: number | null;
+    responseOptionId: number | null;
     avaliationId: number
     isRequired: boolean;
     responseOptions?: IListResponseOptions;

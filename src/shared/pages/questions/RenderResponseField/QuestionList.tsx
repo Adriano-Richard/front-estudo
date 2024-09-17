@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Box, Typography, TextField, Select, MenuItem, Paper, IconButton, Grid } from '@mui/material';
 import { Delete, ContentCopy, Star, StarBorder } from '@mui/icons-material';
@@ -8,7 +7,7 @@ import { Draggable, Droppable } from 'react-beautiful-dnd';
 
 interface QuestionListProps {
     questions: Question[];
-    responseTypes: IResponseOption[];
+    responseOption: IResponseOption[];
     onTitleChange: (index: number, value: string) => void;
     onResponseTypeChange: (index: number, value: number | null) => void;
     onRemove: (index: number) => void;
@@ -18,7 +17,7 @@ interface QuestionListProps {
 
 const QuestionList: React.FC<QuestionListProps> = ({
     questions,
-    responseTypes,
+    responseOption,
     onTitleChange,
     onResponseTypeChange,
     onRemove,
@@ -72,20 +71,25 @@ const QuestionList: React.FC<QuestionListProps> = ({
                                             <TextField
                                                 fullWidth
                                                 label="Título da Questão"
-                                                value={question.title}
+                                                value={question.text}
                                                 onChange={(e) => onTitleChange(index, e.target.value)}
                                                 sx={{ marginBottom: 2 }}
                                             />
                                             <Select
                                                 fullWidth
-                                                value={question.responseTypeId || ''}
+                                                value={question.responseOptionId || ''}
                                                 onChange={(e) => onResponseTypeChange(index, Number(e.target.value))}
+                                                sx={{ marginBottom: 2 }}
                                             >
                                                 <MenuItem value="" disabled>Selecione o tipo de resposta</MenuItem>
-                                                {responseTypes.map((type) => (
+                                                {responseOption.map((type) => (
                                                     <MenuItem key={type.id} value={type.id}>{type.namePatterns}</MenuItem>
                                                 ))}
                                             </Select>
+                                            <RenderResponseField
+                                                question={question}
+                                                responseOption={responseOption}
+                                            />
                                         </Grid>
                                     </Grid>
                                 </Box>
