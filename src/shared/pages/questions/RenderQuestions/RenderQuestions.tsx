@@ -99,7 +99,7 @@ export const RenderQuestion: React.FC<QuestionDetailProps> = ({
                 </Droppable>
             </DragDropContext>
 
-            <VForm ref={formRef} onSubmit={handleSave}>
+            <VForm ref={formRef} onSubmit={handleSave} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 <Grid container spacing={2} mt={2}>
                     <Grid item xs={12} md={6}>
                         <TextField

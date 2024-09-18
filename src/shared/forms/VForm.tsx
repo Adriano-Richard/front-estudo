@@ -1,1 +1,2 @@
-export {Form as VForm} from '@unform/web';
+import { Form } from '@unform/web';
+export { Form as VForm };

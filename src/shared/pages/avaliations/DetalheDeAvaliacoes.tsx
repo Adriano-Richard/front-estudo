@@ -35,6 +35,19 @@ export const DetalheDeAvaliacoes: React.FC = () => {
     const [responseOption, setResponseOption] = useState<IResponseOption[]>([]);
     const questionsRef = useRef<Question[]>(questions);
 
+    // Carregar questões do localStorage ao montar o componente
+    useEffect(() => {
+        const storedQuestions = localStorage.getItem("avaliation_questions");
+        if (storedQuestions) {
+        setQuestions(JSON.parse(storedQuestions)); // Carregar do localStorage
+        }
+    }, []);
+
+    // Salvar questões no localStorage sempre que o estado questions for alterado
+    useEffect(() => {
+        localStorage.setItem("avaliation_questions", JSON.stringify(questions)); // Sempre salvar, mesmo que vazio
+    }, [questions]);
+
     useEffect(() => {
         questionsRef.current = questions; // Atualize o ref quando o estado das questões mudar
     }, [questions]);
@@ -84,6 +97,9 @@ export const DetalheDeAvaliacoes: React.FC = () => {
                         setIsLoading(false);
                         return;
                     }
+
+                    // Limpa o localStorage após salvar as questões
+                    localStorage.removeItem("avaliation_questions");
 
                     // Redirecionando após salvar
                     if (isSaveAndClose()) {

@@ -12,6 +12,12 @@ type TAvaliationsComTotalCount = {
     totalCount: number;
 }
 
+interface AvaliationResponse {
+    id: number;
+    name: string;
+    questionCount: number;
+}
+
 const getByName = async( name = '', page = 1 ): Promise<IListAvaliation | Error> => {
     try {
         const urlRelativa = `/avaliation?Name=${name}&pageNumber=${page}`;
@@ -84,11 +90,11 @@ const updateById = async (id: number, dados: IListAvaliation): Promise<void | Er
     }
 };
 
-const create = async (name: string): Promise<number | Error> => {
+const create = async (name: string): Promise<AvaliationResponse | Error> => {
     try{
-        const { data } = await Api.post('/Avaliation', { name });
+        const { data } = await Api.post<AvaliationResponse>('/Avaliation', { name });
         if (data) {
-            return data.id;
+            return data;
           }
       
           return new Error('Erro ao criar o registro.');
