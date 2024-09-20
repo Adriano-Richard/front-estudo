@@ -9,14 +9,17 @@ interface QuestionDetailProps {
     id: number;
     handleSave: (dados: IFormData) => void;
     responseOption: IResponseOption[];
+    questions: Question[];
+    setQuestions: (questions: Question[]) => void;
 }
 
 export const RenderQuestion: React.FC<QuestionDetailProps> = ({
     id,
     handleSave,
     responseOption,
+    questions,
+    setQuestions,
 }) => {
-    const [questions, setQuestions] = useState<Question[]>([]);
     const { formRef, save, saveAndClose, isSaveAndClose } = useVForm();
 
     

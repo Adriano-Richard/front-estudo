@@ -2,6 +2,7 @@ import { Interface } from "readline/promises";
 import { Environment } from "../../environment";
 import { Api } from "../axios-config";
 import { IListResponseOptions } from "../response-options/ResponseOptionsService";
+import { Question } from "../../pages";
 
 
 export interface IQuestion {
@@ -67,7 +68,7 @@ const getAvaliationVerify = async(name: string): Promise<boolean | Error> => {
 };
 
 
-const create = async (avaliationId: number, questions: IQuestionCreate[]): Promise<number | Error> => {
+const create = async (avaliationId: number, questions: Question[]): Promise<number | Error> => {
     try{
         const { data } = await Api.post('/Question/', {questions}, { headers: { 'Avaliation-Id': avaliationId }});
         if (data) {

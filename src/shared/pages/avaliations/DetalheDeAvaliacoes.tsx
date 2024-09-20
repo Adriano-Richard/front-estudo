@@ -12,7 +12,7 @@ import { QuestionService } from "../../services/questions/QuestionService";
 import { ResponseOptionsService } from "../../services/response-options/ResponseOptionsService";
 
 
-interface IFormData{
+interface IFormData {
     name: string;
     questionCount?: number;
 }
@@ -31,22 +31,11 @@ export const DetalheDeAvaliacoes: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [nome, setNome] = useState('');
     const [originalNome, setOriginalNome] = useState('')
-    const [questions, setQuestions] = useState([]);
+    const [questions, setQuestions] = useState<Question[]>([]);
     const [responseOption, setResponseOption] = useState<IResponseOption[]>([]);
     const questionsRef = useRef<Question[]>(questions);
 
-    // Carregar questões do localStorage ao montar o componente
-    useEffect(() => {
-        const storedQuestions = localStorage.getItem("avaliation_questions");
-        if (storedQuestions) {
-        setQuestions(JSON.parse(storedQuestions)); // Carregar do localStorage
-        }
-    }, []);
-
-    // Salvar questões no localStorage sempre que o estado questions for alterado
-    useEffect(() => {
-        localStorage.setItem("avaliation_questions", JSON.stringify(questions)); // Sempre salvar, mesmo que vazio
-    }, [questions]);
+    
 
     useEffect(() => {
         questionsRef.current = questions; // Atualize o ref quando o estado das questões mudar
@@ -54,21 +43,21 @@ export const DetalheDeAvaliacoes: React.FC = () => {
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setActiveTab(newValue);
-      };
+    };
 
-      const handleSave = (dados: IFormData) => {
+    const handleSave = (dados: IFormData) => {
         formValidationSchema
             .validate(dados, { abortEarly: false })
             .then(async (dadosValidados) => {
                 setIsLoading(true);
-                
+
                 try {
                     let avaliationId: number; // Definindo a variável avaliationId
 
                     if (id === 'nova') {
                         const result = await AvaliationService.create(dadosValidados.name);
                         setIsLoading(false);
-    
+
                         if (result instanceof Error) {
                             alert(result.message);
                             return;
@@ -128,7 +117,7 @@ export const DetalheDeAvaliacoes: React.FC = () => {
 
 
     useEffect(() => {
-        if (id !== 'nova'){
+        if (id !== 'nova') {
             setIsLoading(true);
 
             AvaliationService.getByName(id)
@@ -175,25 +164,25 @@ export const DetalheDeAvaliacoes: React.FC = () => {
         }
     }, [activeTab, nome]);
 
-    return(
-        <LayoutBaseDePagina 
+    return (
+        <LayoutBaseDePagina
             titulo={id === 'nova' ? 'Nova Avaliação' : nome}
             barraDeFerramentas={
-                <FerramentasDeDetalhe 
+                <FerramentasDeDetalhe
                     textoBotaoNovo="Nova"
                     mostrarBotaoSalvarEFechar
                     mostrarBotaoNovo={id !== 'nova'}
                     mostrarBotaoApagar={id !== 'nova'}
 
                     aoClicarEmSalvar={save}
-                    aoClicarEmApagar={() => {  }}
+                    aoClicarEmApagar={() => { }}
                     aoClicarEmNovo={() => navigate('avaliacoes/detalhe/nova')}
                     aoClicarEmSalvarEFechar={saveAndClose}
                     aoClicarEmVoltar={() => navigate('/avaliacoes')}
                 />
             }
         >
-            {isLoading &&(
+            {isLoading && (
                 <LinearProgress variant="indeterminate" />
             )}
             <Tabs value={activeTab} onChange={handleTabChange}>
@@ -201,11 +190,11 @@ export const DetalheDeAvaliacoes: React.FC = () => {
                 <Tab label="Questões" />
             </Tabs>
             {activeTab === 0 && (
-                <VForm ref={formRef} onSubmit={handleSave}  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                <VForm ref={formRef} onSubmit={handleSave} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                     <Box margin={1} display="flex" flexDirection="column" component={Paper} variant="outlined">
                         <Grid container direction="column" padding={2} spacing={2}>
-                            
-                            {isLoading &&(
+
+                            {isLoading && (
                                 <Grid item>
                                     <LinearProgress variant="indeterminate" />
                                 </Grid>
@@ -232,8 +221,8 @@ export const DetalheDeAvaliacoes: React.FC = () => {
             )}
             {activeTab === 1 && (
                 <Box margin={1} display="flex" flexDirection="column" component={Paper} variant="outlined" padding={2}>
-                <Typography variant="h6">Questões da Avaliação</Typography>
-                <RenderQuestion id={parseInt(id)} handleSave={handleSave} responseOption={responseOption}/>
+                    <Typography variant="h6">Questões da Avaliação</Typography>
+                    <RenderQuestion id={parseInt(id)} handleSave={handleSave} responseOption={responseOption} questions={questions} setQuestions={setQuestions} />
                 </Box>
             )}
         </LayoutBaseDePagina>

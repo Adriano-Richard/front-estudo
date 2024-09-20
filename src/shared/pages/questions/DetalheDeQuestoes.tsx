@@ -84,7 +84,7 @@ export const DetalheDeQuestoes: React.FC = () => {
             {isLoading &&(
                 <LinearProgress variant="indeterminate" />
             )}
-            <RenderQuestion id={parseInt(id)} handleSave={handleSave} responseOption={responseOption}/>
+            <RenderQuestion id={parseInt(id)} handleSave={handleSave} responseOption={responseOption} questions={questions} setQuestions={setQuestions}/>
         </LayoutBaseDePagina>
     );
 }
