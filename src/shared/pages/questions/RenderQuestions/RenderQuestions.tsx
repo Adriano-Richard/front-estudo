@@ -12,6 +12,7 @@ interface QuestionDetailProps {
     questions: Question[];
     setQuestions: (questions: Question[]) => void;
 }
+export type Occupation = 'Aluno' | 'Professor' | 'TecnicoAdministrativo' | 'Coordenador' | 'Egresso' | 'Gestor';
 
 export const RenderQuestion: React.FC<QuestionDetailProps> = ({
     id,
@@ -22,10 +23,31 @@ export const RenderQuestion: React.FC<QuestionDetailProps> = ({
 }) => {
     const { formRef, save, saveAndClose, isSaveAndClose } = useVForm();
 
-    
+    const occupationEnumMap: { [key in Occupation]: number } = {
+        Aluno: 0,
+        Professor: 1,
+        TecnicoAdministrativo: 2,
+        Coordenador: 3,
+        Egresso: 4,
+        Gestor: 5,
+    };
+
+    const [selectedOccupations, setSelectedOccupations] = useState<number[]>([]);
+
+    const handleOccupationChange = (index: number, occupation: Occupation) => {
+        const updatedQuestions = [...questions];
+        
+        const updatedOccupations = selectedOccupations.includes(occupationEnumMap[occupation])
+            ? selectedOccupations.filter((item) => item !== occupationEnumMap[occupation]) // Remove se já estiver selecionado
+            : [...selectedOccupations, occupationEnumMap[occupation]]; // Adiciona o valor numérico
+        
+        setSelectedOccupations(updatedOccupations);
+        updatedQuestions[index].allowedOccupations = updatedOccupations; // Salva como lista de enums no estado
+        setQuestions(updatedQuestions);
+    };
     
     const handleAddQuestion = () => {
-        setQuestions([...questions, { id: `question-${questions.length}`, text: '', responseOptionId: null, isRequired: false, description: '', expectativa: 0}]);
+        setQuestions([...questions, { id: `question-${questions.length}`, text: '', responseOptionId: null, isRequired: false, description: '', expectativa: 0, allowedOccupations: []}]);
     }
     const toggleRequired = (index: number) => {
         const updatedQuestions = [...questions];
@@ -36,6 +58,12 @@ export const RenderQuestion: React.FC<QuestionDetailProps> = ({
     const handleTitleChange = (index: number, value: string) => {
         const updatedQuestions = [...questions];
         updatedQuestions[index].text = value;
+        setQuestions(updatedQuestions);
+      };
+
+      const handleDescriptionChange = (index: number, value: string) => {
+        const updatedQuestions = [...questions];
+        updatedQuestions[index].description = value;
         setQuestions(updatedQuestions);
       };
 
@@ -91,7 +119,10 @@ export const RenderQuestion: React.FC<QuestionDetailProps> = ({
                                 questions={questions}
                                 responseOption={responseOption}
                                 onTitleChange={handleTitleChange}
+                                onDescriptionChange={handleDescriptionChange}
                                 onResponseTypeChange={handleResponseTypeChange}
+                                onOccupationChange={handleOccupationChange}
+                                occupationEnumMap={occupationEnumMap}
                                 onRemove={handleRemoveQuestion}
                                 onDuplicate={handleDuplicateQuestion}
                                 toggleRequired={toggleRequired}

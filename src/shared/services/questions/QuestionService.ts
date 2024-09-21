@@ -70,7 +70,14 @@ const getAvaliationVerify = async(name: string): Promise<boolean | Error> => {
 
 const create = async (avaliationId: number, questions: Question[]): Promise<number | Error> => {
     try{
-        const { data } = await Api.post('/Question/', {questions}, { headers: { 'Avaliation-Id': avaliationId }});
+        const requestQuestions = questions.map(question => ({
+            text: question.text,
+            description: question.description,
+            responseOptionId: question.responseOptionId,
+            expectativa: question.expectativa,
+            allowedOccupations: question.allowedOccupations // Certifique-se de que isso é um array de números
+        }));
+        const { data } = await Api.post('/Question', requestQuestions, { headers: { 'Avaliation-Id': avaliationId }});
         if (data) {
             return data.id;
           }

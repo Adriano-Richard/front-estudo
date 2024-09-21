@@ -21,6 +21,7 @@ export type Question = {
     responseOptionId: number | null;
     isRequired: boolean;
     responseOptions?: string[];
+    allowedOccupations: any[];
   };
 
 export interface IResponseOption {

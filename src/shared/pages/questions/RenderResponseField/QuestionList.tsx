@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, TextField, Select, MenuItem, Paper, IconButton, Grid } from '@mui/material';
 import { Delete, ContentCopy, Star, StarBorder } from '@mui/icons-material';
-import RenderResponseField from './RenderResponseField'; // Ajuste o caminho conforme necessário
+import RenderResponseField from './RenderResponseField'; 
 import { IResponseOption, Question } from '../DetalheDeQuestoes';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
+import { OccupationsService } from '../../../services/occupations/OccupationService';
+import { Occupation } from '../RenderQuestions/RenderQuestions';
 
 interface QuestionListProps {
     questions: Question[];
+    occupationEnumMap: { [key in Occupation]: number };
     responseOption: IResponseOption[];
     onTitleChange: (index: number, value: string) => void;
+    onDescriptionChange: (index: number, value: string) => void;
     onResponseTypeChange: (index: number, value: number | null) => void;
+    onOccupationChange: (index: number, value: Occupation) => void;
     onRemove: (index: number) => void;
     onDuplicate: (index: number) => void;
     toggleRequired: (index: number) => void;
@@ -19,11 +24,32 @@ const QuestionList: React.FC<QuestionListProps> = ({
     questions,
     responseOption,
     onTitleChange,
+    onDescriptionChange,
     onResponseTypeChange,
+    onOccupationChange,
+    occupationEnumMap,
     onRemove,
     onDuplicate,
     toggleRequired,
 }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [occupation, setOccupation] = useState<string[]>([]);
+    const [selectedOccupations, setSelectedOccupations] = useState<string[]>([]);
+
+    useEffect(() => {
+        setIsLoading(true);
+        OccupationsService.getAll()
+            .then((result) => {
+                setIsLoading(false);
+                if (result instanceof Error) {
+                    alert(result.message);
+                } else {
+                    setOccupation(result.data);
+                }
+            });
+    }, []);
+
+    
     return (
         <Droppable droppableId="questions">
             {(provided) => (
@@ -75,6 +101,13 @@ const QuestionList: React.FC<QuestionListProps> = ({
                                                 onChange={(e) => onTitleChange(index, e.target.value)}
                                                 sx={{ marginBottom: 2 }}
                                             />
+                                            <TextField
+                                                fullWidth
+                                                label="Descrição da Questão"
+                                                value={question.description}
+                                                onChange={(e) => onDescriptionChange(index, e.target.value)}
+                                                sx={{ marginBottom: 2 }}
+                                            />
                                             <Select
                                                 fullWidth
                                                 value={question.responseOptionId || ''}
@@ -90,6 +123,16 @@ const QuestionList: React.FC<QuestionListProps> = ({
                                                 question={question}
                                                 responseOption={responseOption}
                                             />
+                                            {occupation.map((occ) => (
+                                                <Box key={occ} display="flex" alignItems="center">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={question.allowedOccupations.includes(occupationEnumMap[occ as Occupation])}
+                                                        onChange={() => onOccupationChange(index, occ as Occupation)}
+                                                    />
+                                                    <Typography marginLeft={1}>{occ}</Typography>
+                                                </Box>
+                                            ))}
                                         </Grid>
                                     </Grid>
                                 </Box>
@@ -104,3 +147,4 @@ const QuestionList: React.FC<QuestionListProps> = ({
 };
 
 export default QuestionList;
+
