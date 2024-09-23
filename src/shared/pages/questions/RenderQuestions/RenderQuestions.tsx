@@ -2,7 +2,7 @@ import { Box, Button, Typography, Grid, TextField } from "@mui/material";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import QuestionList from "../RenderResponseField/QuestionList"; // Supondo que QuestionList seja um componente
 import { useVForm, VForm } from "../../../forms";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IFormData, IResponseOption, Question } from "../DetalheDeQuestoes";
 
 interface QuestionDetailProps {
@@ -34,15 +34,35 @@ export const RenderQuestion: React.FC<QuestionDetailProps> = ({
 
     const [selectedOccupations, setSelectedOccupations] = useState<number[]>([]);
 
+    useEffect(() => {
+        // Verificar se há perguntas e se elas precisam de ajuste nas ocupações
+        const needsUpdate = questions.some(question => 
+            question.allowedOccupations.some((occupation: any) => typeof occupation === 'string')
+        );
+    
+        if (needsUpdate) {
+            const updatedQuestions = questions.map((question) => {
+                // Mapear as ocupações permitidas para o formato numérico esperado
+                const mappedOccupations = question.allowedOccupations.map((occupation: Occupation) => occupationEnumMap[occupation]);
+    
+                return {
+                    ...question,
+                    allowedOccupations: mappedOccupations, // Atualiza com ocupações numéricas
+                };
+            });
+            setQuestions(updatedQuestions);
+        }
+    }, [questions]);
+    
     const handleOccupationChange = (index: number, occupation: Occupation) => {
         const updatedQuestions = [...questions];
-        
-        const updatedOccupations = selectedOccupations.includes(occupationEnumMap[occupation])
-            ? selectedOccupations.filter((item) => item !== occupationEnumMap[occupation]) // Remove se já estiver selecionado
-            : [...selectedOccupations, occupationEnumMap[occupation]]; // Adiciona o valor numérico
-        
-        setSelectedOccupations(updatedOccupations);
-        updatedQuestions[index].allowedOccupations = updatedOccupations; // Salva como lista de enums no estado
+    
+        // Verifica se a ocupação já está selecionada
+        const updatedOccupations = updatedQuestions[index].allowedOccupations.includes(occupationEnumMap[occupation])
+            ? updatedQuestions[index].allowedOccupations.filter((item) => item !== occupationEnumMap[occupation]) // Remove se já estiver selecionada
+            : [...updatedQuestions[index].allowedOccupations, occupationEnumMap[occupation]]; // Adiciona se não estiver selecionada
+    
+        updatedQuestions[index].allowedOccupations = updatedOccupations; // Atualiza a lista de ocupações permitidas
         setQuestions(updatedQuestions);
     };
     
@@ -72,7 +92,7 @@ export const RenderQuestion: React.FC<QuestionDetailProps> = ({
         const selectedType = responseOption.find((type) => type.id === value);
 
         updatedQuestions[index].responseOptionId = value;
-        updatedQuestions[index].responseOptions = selectedType ? selectedType.responses : []; // Armazena as opções de resposta, se houver
+        updatedQuestions[index].responseOptions = selectedType ? selectedType : selectedType; // Armazena as opções de resposta, se houver
 
         setQuestions(updatedQuestions);
     };  

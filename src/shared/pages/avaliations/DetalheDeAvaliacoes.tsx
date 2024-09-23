@@ -41,6 +41,33 @@ export const DetalheDeAvaliacoes: React.FC = () => {
         questionsRef.current = questions; // Atualize o ref quando o estado das questões mudar
     }, [questions]);
 
+    useEffect(() => {
+        const loadQuestions = async () => {
+            if (id !== 'nova') {
+                setIsLoading(true);  // Defina o estado de carregamento como verdadeiro
+                try {
+                    // Chame o serviço para buscar as questões
+                    const result = await QuestionService.getQuestionByAvaliationName(id);
+                    
+                    // Se o resultado for uma instância de erro, você pode lidar com isso aqui
+                    if (result instanceof Error) {
+                        console.error(result.message);
+                        // Lidar com o erro (exibir uma mensagem ao usuário, por exemplo)
+                    } else {
+                        // Atualize o estado com as questões carregadas
+                        setQuestions(result);
+                    }
+                } catch (error) {
+                    console.error('Erro ao carregar as questões:', error);
+                } finally {
+                    setIsLoading(false);  // Defina o estado de carregamento como falso
+                }
+            }
+        };
+    
+        loadQuestions();
+    }, [id]); 
+
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setActiveTab(newValue);
     };

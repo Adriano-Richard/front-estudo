@@ -20,6 +20,10 @@ export interface IQuestionCreate extends IQuestion {
     avaliationId: number;
 }
 
+type TQuestionsAvaliation = {
+    data: Question[];
+}
+
 type TQuestions = {
     data: IListResponseOptions[];
 }
@@ -40,6 +44,19 @@ const getAll = async (): Promise<TQuestions | Error> => {
         return new Error((error as { message: string }).message || 'Erro ao listar os registros.');
     }
 };
+
+const getQuestionByAvaliationName = async (name: string): Promise<Question[] | Error> => {
+    try {
+        const urlRelativa = `/Question?AvaliationName=${name}`;
+        const { data } = await Api.get(urlRelativa);
+        if (data) {
+            return data;
+        }
+        return new Error('Erro ao listar os registros.');
+    } catch (error) {
+        return new Error((error as { message: string }).message || 'Erro ao listar os registros.');
+    }
+}
 
 
 const updateName = async(name: string, newAvaliationName: string): Promise<void | Error> => {
@@ -93,5 +110,6 @@ export const QuestionService = {
     updateName,
     getAvaliationVerify,
     create,
-    getAll
+    getAll,
+    getQuestionByAvaliationName
 };

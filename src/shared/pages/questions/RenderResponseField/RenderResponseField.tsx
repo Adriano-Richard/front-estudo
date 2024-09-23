@@ -42,7 +42,7 @@ const RenderResponseField: React.FC<RenderResponseFieldProps> = ({ question, res
                 displayEmpty
             >
                 <MenuItem value="" disabled>Selecione uma opção</MenuItem>
-                {question.responseOptions?.map((option, index) => (
+                {question.responseOptions?.responses?.map((option, index) => (
                     <MenuItem key={index} value={option}>{option}</MenuItem>
                 ))}
             </Select>
@@ -56,7 +56,7 @@ const RenderResponseField: React.FC<RenderResponseFieldProps> = ({ question, res
                     value={responseValue || ''}  // Vincula ao estado
                     onChange={handleTextOrRadioChange}  // Atualiza o estado ao selecionar
                 >
-                    {question.responseOptions?.map((option, index) => (
+                    {question.responseOptions?.responses?.map((option, index) => (
                         <FormControlLabel key={index} value={option} control={<Radio />} label={option} />
                     ))}
                 </RadioGroup>

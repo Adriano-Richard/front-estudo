@@ -55,7 +55,7 @@ const QuestionList: React.FC<QuestionListProps> = ({
             {(provided) => (
                 <div {...provided.droppableProps} ref={provided.innerRef}>
                     {questions.map((question, index) => (
-                        <Draggable key={question.id} draggableId={question.id} index={index}>
+                        <Draggable key={question.id.toString()} draggableId={question.id.toString()} index={index}>
                             {(provided) => (
                                 <Box
                                     margin={1}
