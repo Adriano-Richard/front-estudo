@@ -12,7 +12,7 @@ export interface IQuestion {
     expectativa: number;
     responseOptionId: number | null;
     avaliationId: number
-    isRequired: boolean;
+    obrigatoria: boolean;
     responseOptions?: IListResponseOptions;
   };
 
@@ -92,7 +92,8 @@ const create = async (avaliationId: number, questions: Question[]): Promise<numb
             description: question.description,
             responseOptionId: question.responseOptionId,
             expectativa: question.expectativa,
-            allowedOccupations: question.allowedOccupations // Certifique-se de que isso é um array de números
+            obrigatoria: question.obrigatoria,
+            allowedOccupations: question.allowedOccupations, // Certifique-se de que isso é um array de números
         }));
         const { data } = await Api.post('/Question', requestQuestions, { headers: { 'Avaliation-Id': avaliationId }});
         if (data) {

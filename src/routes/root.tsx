@@ -5,6 +5,8 @@ import { CompactProvider, UseDrawerContext } from "../shared/contexts";
 import { useEffect } from "react";
 import Cadastro from "../shared/pages/login/cadastro/Cadastro";
 import { ListagemDeUniversidades } from "../shared/pages/universities/ListagemDeUniversidades";
+import PrivateRoute from "../shared/pages/private-route/PrivateRoute";
+import AvaliationResponsePage from "../shared/pages/avaliations/QuestionarioDeAvaliacao";
 
 export const router = createBrowserRouter([
   {
@@ -13,19 +15,43 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/pagina-inicial",
-        element:  <Dashboard />,
+        element:  (
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/avaliacoes",
-        element: <ListagemDeAvaliacoes />,
+        element: (
+          <PrivateRoute>
+            <ListagemDeAvaliacoes />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/avaliacoes/detalhe/:id",
-        element: <DetalheDeAvaliacoes />,
+        element: (
+          <PrivateRoute>
+            <DetalheDeAvaliacoes />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/avaliacoes/responder/:id",
+        element: (
+          <PrivateRoute>
+            <AvaliationResponsePage />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/usuarios/detalhe",
-        element: <UserProfile />,
+        element: (
+          <PrivateRoute>
+            <UserProfile />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/questoes/detalhe",
@@ -36,10 +62,6 @@ export const router = createBrowserRouter([
         element: <ListagemDeUniversidades />
       }
     ],
-  },
-  {
-    path: "/login",
-    element: <Login children={undefined} />,
   },
   {
     path: "/cadastro",

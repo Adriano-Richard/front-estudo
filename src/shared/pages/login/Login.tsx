@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useAuthContext } from '../../contexts';
 import { Copyright } from '@mui/icons-material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { useNavigate } from 'react-router-dom';
 
 
 const loginSchema = yup.object().shape({
@@ -24,6 +25,7 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
   const [emailError, setEmailError] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
+  const navigate = useNavigate();
 
 
   const handleSubmit = () => {
@@ -34,6 +36,7 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
       .then(dadosValidados => {
         login(dadosValidados.email, dadosValidados.password)
           .then(() => {
+            navigate('/pagina-inicial');
             setIsLoading(false);
           });
       })

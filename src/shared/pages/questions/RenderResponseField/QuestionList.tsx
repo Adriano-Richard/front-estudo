@@ -4,7 +4,7 @@ import { Delete, ContentCopy, Star, StarBorder } from '@mui/icons-material';
 import RenderResponseField from './RenderResponseField'; 
 import { IResponseOption, Question } from '../DetalheDeQuestoes';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
-import { OccupationsService } from '../../../services/occupations/OccupationService';
+import { UserGroupsService } from '../../../services/occupations/UserGroupsService';
 import { Occupation } from '../RenderQuestions/RenderQuestions';
 
 interface QuestionListProps {
@@ -38,7 +38,7 @@ const QuestionList: React.FC<QuestionListProps> = ({
 
     useEffect(() => {
         setIsLoading(true);
-        OccupationsService.getAll()
+        UserGroupsService.getOccupations()
             .then((result) => {
                 setIsLoading(false);
                 if (result instanceof Error) {

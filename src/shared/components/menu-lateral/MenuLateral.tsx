@@ -49,15 +49,22 @@ export const MenuLateral: React.FC<IMenuLateral> = ({ children }) => {
     const { logout } = useAuthContext();
     const { isCompact, toggleCompact } = useCompactMenuContext();
     //const [isCompact, setIsCompact] = useState(false);
+    const { user } = useAuthContext();
 
     const navigate = useNavigate();
     const handleNavigate = () => {
         navigate('/usuarios/detalhe'); // Substitua '/perfil' pela rota desejada
     };
 
-    // const handleToggleCompact = () => {
-    //     setIsCompact(!isCompact);
-    // };
+    const filteredDrawerOptions = drawerOptions.filter((drawerOption) => {
+        // Adicione a lógica para filtrar as opções de menu com base no cargo do usuário
+        if (user?.cargo === 'Aluno') {
+            // Por exemplo, se for Aluno, não mostrar "Questões" e "Universidades"
+            return drawerOption.path !== '/questoes/detalhe' && drawerOption.path !== '/universidades';
+        }
+        // Permitir todas as opções para outros cargos
+        return true;
+    });
 
     return(
         
@@ -86,7 +93,7 @@ export const MenuLateral: React.FC<IMenuLateral> = ({ children }) => {
                     {!isCompact &&
                         <>
                             <Avatar
-                                alt="Mike Andrew"
+                                alt={user?.userName || 'Usuário'}
                                 src="/user/anime3.png"
                                 sx={{
                                     width: 90,
@@ -96,13 +103,13 @@ export const MenuLateral: React.FC<IMenuLateral> = ({ children }) => {
                                 }}
                                 onClick={handleNavigate} // Adicione o evento de clique aqui
                             />
-                            <Typography>Mike Andrew</Typography>
-                            <Typography variant="subtitle2">Ceo/Co-Founder</Typography>
+                            <Typography>{user?.userName || 'Usuário'}</Typography>
+                            <Typography variant="subtitle2">{user?.cargo || 'Cargo'}</Typography>
                         </>}
                     {isCompact &&
                         <>
                             <Avatar
-                                alt="Mike Andrew"
+                                alt={user?.userName || 'Usuário'}
                                 src="/user/anime3.png"
                                 sx={{ width: 40, height: 40, margin: '100px auto 0px', cursor: 'pointer' }}
                                 onClick={handleNavigate} />
@@ -122,7 +129,7 @@ export const MenuLateral: React.FC<IMenuLateral> = ({ children }) => {
                 </Box>
                 <Box flex={1}>
                     <List component="nav">
-                        {drawerOptions.map(drawerOption => (
+                        {filteredDrawerOptions.map(drawerOption => (
                             <ListItemLink
                                 key={drawerOption.path}
                                 icon={drawerOption.icon}

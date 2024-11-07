@@ -4,8 +4,9 @@ import { LayoutBaseDePagina } from "../../layouts"
 import { useEffect, useMemo, useState } from "react";
 import { AvaliationService, IListAvaliation } from "../../services/avaliations/AvaliationService";
 import { useDebounce } from "../../hooks/UseDebounce";
-import { Container, Grid, Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
+import { Button, Container, Grid, Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
 import { Environment } from "../../environment";
+import { useAuthContext } from "../../contexts";
 
 
 export const ListagemDeAvaliacoes: React.FC = () => {
@@ -16,6 +17,8 @@ export const ListagemDeAvaliacoes: React.FC = () => {
     const [totalCount, setTotalCount] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [rows, setRows] = useState<IListAvaliation[]>([]);
+
+    const { user } = useAuthContext();
 
     const busca = useMemo(() => {
         return searchParams.get('busca') || '';
@@ -89,12 +92,24 @@ export const ListagemDeAvaliacoes: React.FC = () => {
                                 <TableCell>{row.name}</TableCell>
                                 <TableCell>{row.questionCount}</TableCell>
                                 <TableCell>
-                                    <IconButton sx={{ mr: 2 }}>
-                                        <Icon>delete</Icon>
-                                    </IconButton>
-                                    <IconButton onClick={() => navigate(`/avaliacoes/detalhe/${row.name}`)}>
-                                        <Icon>edit</Icon>
-                                    </IconButton>
+                                    {user?.cargo === 'admin' ? (
+                                        <>
+                                            <IconButton sx={{ mr: 2 }}>
+                                                <Icon>delete</Icon>
+                                            </IconButton>
+                                            <IconButton onClick={() => navigate(`/avaliacoes/detalhe/${row.name}`)}>
+                                                <Icon>edit</Icon>
+                                            </IconButton>
+                                        </>
+                                    ) : (
+                                        <Button 
+                                            variant="contained" 
+                                            color="primary" 
+                                            onClick={() => navigate(`/avaliacoes/responder/${row.name}`)}
+                                        >
+                                            Responder
+                                        </Button>
+                                    )}
                                 </TableCell>
                             </TableRow>
                         ))}

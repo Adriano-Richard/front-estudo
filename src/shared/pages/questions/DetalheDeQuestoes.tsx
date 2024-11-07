@@ -19,7 +19,7 @@ export type Question = {
     description: string;
     expectativa: number;
     responseOptionId: number | null;
-    isRequired: boolean;
+    obrigatoria: boolean;
     responseOptions?: IResponseOption;
     allowedOccupations: any[];
   };
