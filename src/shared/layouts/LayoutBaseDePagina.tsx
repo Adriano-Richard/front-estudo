@@ -1,6 +1,5 @@
-import { Card, Icon, IconButton, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Card, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
-import { UseDrawerContext } from "../contexts";
 import React from "react";
 
 interface ILayoutBaseDePaginaProps {

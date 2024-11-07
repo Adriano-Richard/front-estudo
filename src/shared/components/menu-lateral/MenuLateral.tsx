@@ -1,10 +1,9 @@
 import { Avatar, Divider, Drawer, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Theme, Typography, useMediaQuery, useTheme } from '@mui/material';
 import Icon from '@mui/material/Icon';
 import { Box } from '@mui/system';
-import { CompactProvider, UseAppThemeContext, UseDrawerContext, useAuthContext, useCompactMenuContext } from '../../contexts';
+import { UseAppThemeContext, UseDrawerContext, useAuthContext, useCompactMenuContext } from '../../contexts';
 
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
-import { useState } from 'react';
 
 interface IListItemLink {
     label: string;
