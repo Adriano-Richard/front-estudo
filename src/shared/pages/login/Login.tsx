@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { Avatar, Box, Button, Card, CardActions, CardContent, Checkbox, CircularProgress, CssBaseline, FormControlLabel, Grid, Link, Paper, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, Checkbox, CircularProgress, CssBaseline, FormControlLabel, Grid, Link, Paper, TextField, Typography } from '@mui/material';
 import * as yup from 'yup';
-import Image from 'next/image';
 import { useAuthContext } from '../../contexts';
 import { Copyright } from '@mui/icons-material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';

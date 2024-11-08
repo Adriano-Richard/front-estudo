@@ -17,13 +17,12 @@ interface AdminNavbarProps {
   children: React.ReactNode
 }
 
-const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+const StyledToolbar = styled(Toolbar)(() => ({
   justifyContent: "space-between",
 }));
 
 export const AdminNavbar: React.FC<AdminNavbarProps> = ({
   brandText,
-  sidebarOpened,
   toggleSidebar,
   children,
 }) => {

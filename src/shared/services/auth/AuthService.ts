@@ -1,10 +1,6 @@
 import { Api } from '../axios-config';
 
 
-interface IAuth {
-  accessToken: string;
-}
-
 export const occupationMap: { [key: string]: number } = {
   "Aluno": 0,
   "Professor": 1,

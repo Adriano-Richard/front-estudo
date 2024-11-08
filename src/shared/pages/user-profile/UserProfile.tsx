@@ -3,17 +3,18 @@ import { LayoutBaseDePagina } from "../../layouts";
 import { FerramentasDeDetalhe } from "../../components";
 import { useEffect, useState } from "react";
 import { AvaliationService } from "../../services/avaliations/AvaliationService";
-import { Avatar, Box, Button, Card, CardActions, CardContent, CardHeader, Container, Grid, IconButton, LinearProgress, Paper, TextField, Typography } from "@mui/material";
-import { VTextField, VForm, useVForm, IVFormErros } from "../../forms";
+import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Container, Grid, IconButton, LinearProgress, TextField, Typography } from "@mui/material";
+import { useVForm, IVFormErros } from "../../forms";
 import * as yup from "yup";
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import GoogleIcon from '@mui/icons-material/Google';
 
-interface IFormData{
+interface IFormData {
     name: string;
     questionCount: number;
 }
+
 const formValidationSchema: yup.Schema<IFormData> = yup.object().shape({
     name: yup.string().required().min(3),
     questionCount: yup.number().required(),
@@ -22,88 +23,75 @@ const formValidationSchema: yup.Schema<IFormData> = yup.object().shape({
 export const UserProfile: React.FC = () => {
     const { id = 'nova' } = useParams<'id'>();
     const navigate = useNavigate();
-
     const { formRef, save, saveAndClose, isSaveAndClose } = useVForm();
 
     const [isLoading, setIsLoading] = useState(false);
     const [nome, setNome] = useState('');
+    const [formData, setFormData] = useState<IFormData>({ name: '', questionCount: 0 });
 
     const handleSave = (dados: IFormData) => {
-
-        formValidationSchema.
-            validate(dados, { abortEarly: false })
-            .then((dadosValidados) => {
+        formValidationSchema
+            .validate(dados, { abortEarly: false })
+            .then((dadosValidados: IFormData) => {
                 setIsLoading(true);
-        
-                if(id === 'nova'){
-                    AvaliationService
-                        .create(dadosValidados)
-                        .then((result) => {
-                            setIsLoading(false);
-                            if (result instanceof Error) {
-                                alert(result.message);
+                const dadosComoString = JSON.stringify(dadosValidados);
+
+                if (id === 'nova') {
+                    AvaliationService.create(dadosComoString).then((result) => {
+                        setIsLoading(false);
+                        if (result instanceof Error) {
+                            alert(result.message);
+                        } else {
+                            if (isSaveAndClose()) {
+                                navigate('/avaliation');
                             } else {
-                                if (isSaveAndClose()) {
-                                    navigate('/avaliation');
-                                } else {
-                                    navigate(`/avaliation/detalhe/${result}`);
-                                }
+                                navigate(`/avaliation/detalhe/${result}`);
                             }
-                        });
-                }   else {
-                        AvaliationService
-                            .updateById(Number(id), dadosValidados)
-                            .then((result) => {
-                                setIsLoading(false);
-                                if (result instanceof Error) {
-                                    alert(result.message);
-                                } else {
-                                    if (isSaveAndClose()) {
-                                        navigate('/avaliation');
-                                    }
-                                }
-                            });
-                    }
+                        }
+                    });
+                } else {
+                    AvaliationService.updateById(Number(id), dadosValidados).then((result) => {
+                        setIsLoading(false);
+                        if (result instanceof Error) {
+                            alert(result.message);
+                        } else {
+                            if (isSaveAndClose()) {
+                                navigate('/avaliation');
+                            }
+                        }
+                    });
+                }
             })
             .catch((errors: yup.ValidationError) => {
                 const ValidationErrors: IVFormErros = {};
-
                 errors.inner.forEach(error => {
                     if (!error.path) return;
-
                     ValidationErrors[error.path] = error.message;
                 });
-                console.log(ValidationErrors);
                 formRef.current?.setErrors(ValidationErrors);
-            })
-
-        
+            });
     };
 
-
     useEffect(() => {
-        if (id !== 'nova'){
+        if (id !== 'nova') {
             setIsLoading(true);
-
-            AvaliationService.getByName(id)
-                .then((result) => {
-                    setIsLoading(false);
-                    if (result instanceof Error) {
-                        alert(result.message);
-                        navigate('/avaliacoes');
-                    } else {
-                        setNome(result.name);
-                        formRef.current?.setData(result);
-                    }
-                });
-        } else {
-            formRef.current?.setData({
-                name: ''
+            AvaliationService.getByName(id).then((result) => {
+                setIsLoading(false);
+                if (result instanceof Error) {
+                    alert(result.message);
+                    navigate('/avaliacoes');
+                } else {
+                    setNome(result.name);
+                    formRef.current?.setData(result);
+                    setFormData({ name: result.name, questionCount: result.questionCount ?? 0 });
+                }
             });
+        } else {
+            formRef.current?.setData({ name: '', questionCount: 0 });
         }
     }, [id]);
 
-    return(
+    return (
         <LayoutBaseDePagina 
             titulo={id === 'nova' ? 'Nova Avaliação' : nome}
             barraDeFerramentas={
@@ -112,116 +100,47 @@ export const UserProfile: React.FC = () => {
                     mostrarBotaoSalvarEFechar
                     mostrarBotaoNovo={id !== 'nova'}
                     mostrarBotaoApagar={id !== 'nova'}
-
                     aoClicarEmSalvar={save}
-                    aoClicarEmApagar={() => {  }}
+                    aoClicarEmApagar={() => {}}
                     aoClicarEmNovo={() => navigate('avaliacoes/detalhe/nova')}
                     aoClicarEmSalvarEFechar={saveAndClose}
                     aoClicarEmVoltar={() => navigate('/avaliacoes')}
                 />
             }
         >
-            {isLoading &&(
-                <LinearProgress variant="indeterminate" />
-            )}
-            <p></p>
-
+            {isLoading && <LinearProgress variant="indeterminate" />}
             <Container>
-                <Grid container spacing={4}> {/* Espaçamento entre colunas principais */}
+                <Grid container spacing={4}>
                     <Grid item md={8}>
-                    <Card>
-                        <CardHeader
-                        title={<Typography variant="h5">Edit Profile</Typography>}
-                        />
-                        <CardContent>
-                        <Grid container spacing={2} direction="column"> {/* Alteração aqui */}
-                            <Grid item>
-                            <Grid container spacing={2}> {/* Espaçamento entre os campos do formulário */}
-                                <Grid item md={5}>
-                                <TextField
-                                    fullWidth
-                                    label="Company (disabled)"
-                                    defaultValue="Creative Code Inc."
-                                    disabled
-                                />
+                        <Card>
+                            <CardHeader title={<Typography variant="h5">Edit Profile</Typography>} />
+                            <CardContent>
+                                <Grid container spacing={2} direction="column">
+                                    <Grid item>
+                                        <TextField
+                                            fullWidth
+                                            label="Name"
+                                            value={formData.name}
+                                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                        />
+                                    </Grid>
+                                    <Grid item>
+                                        <TextField
+                                            fullWidth
+                                            label="Question Count"
+                                            type="number"
+                                            value={formData.questionCount}
+                                            onChange={(e) => setFormData({ ...formData, questionCount: Number(e.target.value) })}
+                                        />
+                                    </Grid>
                                 </Grid>
-                                <Grid item md={3}>
-                                <TextField
-                                    fullWidth
-                                    label="Username"
-                                    defaultValue="michael23"
-                                />
-                                </Grid>
-                                <Grid item md={4}>
-                                <TextField
-                                    fullWidth
-                                    label="Email address"
-                                    defaultValue="mike@email.com"
-                                    type="email"
-                                />
-                                </Grid>
-                            </Grid>
-                            </Grid>
-                            <Grid item>
-                            <Grid container spacing={2}>
-                                <Grid item md={6}>
-                                <TextField
-                                    fullWidth
-                                    label="First Name"
-                                    defaultValue="Mike"
-                                />
-                                </Grid>
-                                <Grid item md={6}>
-                                <TextField
-                                    fullWidth
-                                    label="Last Name"
-                                    defaultValue="Andrew"
-                                />
-                                </Grid>
-                            </Grid>
-                            </Grid>
-                            <Grid item>
-                            <Grid container spacing={2}>
-                                <Grid item md={12}>
-                                <TextField
-                                    fullWidth
-                                    label="Address"
-                                    defaultValue="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09"
-                                />
-                                </Grid>
-                            </Grid>
-                            </Grid>
-                            <Grid item>
-                            <Grid container spacing={2}>
-                                <Grid item md={4}>
-                                <TextField fullWidth label="City" defaultValue="Mike" />
-                                </Grid>
-                                <Grid item md={4}>
-                                <TextField fullWidth label="Country" defaultValue="Andrew" />
-                                </Grid>
-                                <Grid item md={4}>
-                                <TextField fullWidth label="Postal Code" type="number" />
-                                </Grid>
-                            </Grid>
-                            </Grid>
-                            <Grid item>
-                            <TextField
-                                fullWidth
-                                multiline
-                                rows={4}
-                                label="About Me"
-                                defaultValue="Lamborghini Mercy, Your chick she so thirsty, I'm in
-                                        that two seat Lambo."
-                            />
-                            </Grid>
-                        </Grid>
-                        </CardContent>
-                        <CardActions>
-                        <Button variant="contained" color="primary">
-                            Save
-                        </Button>
-                        </CardActions>
-                    </Card>
+                            </CardContent>
+                            <CardActions>
+                                <Button variant="contained" color="primary" onClick={() => handleSave(formData)}>
+                                    Save
+                                </Button>
+                            </CardActions>
+                        </Card>
                     </Grid>
                     <Grid item md={4}>
                     <Card>

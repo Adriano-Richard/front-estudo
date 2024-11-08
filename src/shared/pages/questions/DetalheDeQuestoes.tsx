@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { VForm, useVForm} from "../../forms";
+import { useVForm} from "../../forms";
 import { LayoutBaseDePagina } from "../../layouts";
 import { FerramentasDeDetalhe } from "../../components";
 import { useNavigate, useParams } from "react-router-dom";
@@ -36,16 +36,16 @@ export const DetalheDeQuestoes: React.FC = () => {
     const { id = 'nova' } = useParams<'id'>();
     const navigate = useNavigate();
 
-    const { formRef, save, saveAndClose, isSaveAndClose } = useVForm();
+    const { save, saveAndClose } = useVForm();
 
     const [isLoading, setIsLoading] = useState(false);
-    const [nome, setNome] = useState('');
+    const [nome] = useState('');
 
     const [questions, setQuestions] = useState<Question[]>([]);
 
     const [responseOption, setResponseOption] = useState<IResponseOption[]>([]);
 
-    const handleSave = (dados: IFormData) => {
+    const handleSave = () => {
         
     };
 

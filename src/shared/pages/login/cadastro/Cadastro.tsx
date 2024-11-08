@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Card, CardContent, Checkbox, Container, CssBaseline, debounce, FormControlLabel, Grid, Link, MenuItem, Paper, Select, SelectChangeEvent, selectClasses, TextField, Theme, Typography } from "@mui/material";
+import { Avatar, Box, Button, Card, CardContent, Grid, Link, MenuItem, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
 import { IListUniversity, UniversityService } from "../../../services/universities/UniversityService";
 import { useDebounce } from "../../../hooks/UseDebounce";
@@ -8,10 +8,10 @@ import { ageGroupMap, AuthService, experienceLevelMap, ICreateUserRequest, occup
 
 
 const Cadastro: React.FC = () => {
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams ] = useSearchParams();
     const { debounce } = useDebounce();
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(true);
+    const [_isLoading, setIsLoading] = useState(true);
     const [rows, setRows] = useState<IListUniversity[]>([]);
     const [occupation, setOccupation] = useState<string[]>([]);
     const [formValues, setFormValues] = useState({

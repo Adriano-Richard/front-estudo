@@ -2,7 +2,7 @@ import { Box, Button, Typography, Grid, TextField } from "@mui/material";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import QuestionList from "../RenderResponseField/QuestionList"; // Supondo que QuestionList seja um componente
 import { useVForm, VForm } from "../../../forms";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { IFormData, IResponseOption, Question } from "../DetalheDeQuestoes";
 
 interface QuestionDetailProps {
@@ -21,7 +21,7 @@ export const RenderQuestion: React.FC<QuestionDetailProps> = ({
     questions,
     setQuestions,
 }) => {
-    const { formRef, save, saveAndClose, isSaveAndClose } = useVForm();
+    const { formRef } = useVForm();
 
     const occupationEnumMap: { [key in Occupation]: number } = {
         Aluno: 0,
@@ -31,8 +31,6 @@ export const RenderQuestion: React.FC<QuestionDetailProps> = ({
         Egresso: 4,
         Gestor: 5,
     };
-
-    const [selectedOccupations, setSelectedOccupations] = useState<number[]>([]);
 
     useEffect(() => {
         // Verificar se há perguntas e se elas precisam de ajuste nas ocupações
@@ -67,11 +65,11 @@ export const RenderQuestion: React.FC<QuestionDetailProps> = ({
     };
     
     const handleAddQuestion = () => {
-        setQuestions([...questions, { id: `question-${questions.length}`, text: '', responseOptionId: null, isRequired: false, description: '', expectativa: 0, allowedOccupations: []}]);
+        setQuestions([...questions, { id: `question-${questions.length}`, text: '', responseOptionId: null, obrigatoria: false, description: '', expectativa: 0, allowedOccupations: []}]);
     }
     const toggleRequired = (index: number) => {
         const updatedQuestions = [...questions];
-        updatedQuestions[index].isRequired = !updatedQuestions[index].isRequired;
+        updatedQuestions[index].obrigatoria = !updatedQuestions[index].obrigatoria;
         setQuestions(updatedQuestions);
       };
 

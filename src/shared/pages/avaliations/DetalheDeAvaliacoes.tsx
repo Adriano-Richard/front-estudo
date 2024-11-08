@@ -6,7 +6,7 @@ import { AvaliationService } from "../../services/avaliations/AvaliationService"
 import { Box, Grid, LinearProgress, Paper, Tab, Tabs, Typography } from "@mui/material";
 import { VTextField, VForm, useVForm, IVFormErros } from "../../forms";
 import * as yup from "yup";
-import { DetalheDeQuestoes, IResponseOption, Question } from "../questions/DetalheDeQuestoes";
+import { IResponseOption, Question } from "../questions/DetalheDeQuestoes";
 import { RenderQuestion } from "../questions/RenderQuestions/RenderQuestions";
 import { QuestionService } from "../../services/questions/QuestionService";
 import { ResponseOptionsService } from "../../services/response-options/ResponseOptionsService";
@@ -68,7 +68,7 @@ export const DetalheDeAvaliacoes: React.FC = () => {
         loadQuestions();
     }, [id]); 
 
-    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
         setActiveTab(newValue);
     };
 

@@ -2,9 +2,8 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 import { FerramentasDaListagem } from "../../components"
 import { LayoutBaseDePagina } from "../../layouts"
 import { useEffect, useMemo, useState } from "react";
-import { AvaliationService, IListAvaliation } from "../../services/avaliations/AvaliationService";
 import { useDebounce } from "../../hooks/UseDebounce";
-import { Container, Grid, Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
+import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
 import { Environment } from "../../environment";
 import { IListUniversity, UniversityService } from "../../services/universities/UniversityService";
 

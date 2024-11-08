@@ -1,5 +1,3 @@
-import { Interface } from "readline/promises";
-import { Environment } from "../../environment";
 import { Api } from "../axios-config";
 import { IListResponseOptions } from "../response-options/ResponseOptionsService";
 import { Question } from "../../pages";
@@ -18,10 +16,6 @@ export interface IQuestion {
 
 export interface IQuestionCreate extends IQuestion {
     avaliationId: number;
-}
-
-type TQuestionsAvaliation = {
-    data: Question[];
 }
 
 type TQuestions = {

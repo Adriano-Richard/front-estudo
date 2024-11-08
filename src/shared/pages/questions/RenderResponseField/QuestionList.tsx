@@ -32,9 +32,8 @@ const QuestionList: React.FC<QuestionListProps> = ({
     onDuplicate,
     toggleRequired,
 }) => {
-    const [isLoading, setIsLoading] = useState(false);
+    const [_isLoading, setIsLoading] = useState(false);
     const [occupation, setOccupation] = useState<string[]>([]);
-    const [selectedOccupations, setSelectedOccupations] = useState<string[]>([]);
 
     useEffect(() => {
         setIsLoading(true);
@@ -75,14 +74,14 @@ const QuestionList: React.FC<QuestionListProps> = ({
                                                         Questão {index + 1}
                                                     </Typography>
                                                     <IconButton onClick={() => toggleRequired(index)}>
-                                                        {question.isRequired ? (
+                                                        {question.obrigatoria ? (
                                                             <Star style={{ color: 'red' }} fontSize="small" />
                                                         ) : (
                                                             <StarBorder fontSize="small" />
                                                         )}
                                                     </IconButton>
                                                     <Typography variant="body2" sx={{ marginLeft: 1 }}>
-                                                        {question.isRequired ? "Obrigatória" : "Opcional"}
+                                                        {question.obrigatoria ? "Obrigatória" : "Opcional"}
                                                     </Typography>
                                                 </Box>
                                                 <Box marginBottom={2}>
