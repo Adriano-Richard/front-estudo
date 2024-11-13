@@ -19,9 +19,7 @@ const getAll = async (page = 1, filter = ''): Promise<TUniversities | Error> => 
             urlRelativa += `&name=${filter}`;
         }
 
-        const { data, headers } = await Api.get(urlRelativa, {
-            headers: { 'ngrok-skip-browser-warning': 'true' }
-        });
+        const { data, headers } = await Api.get(urlRelativa);
 
         if (data) {
             return{
