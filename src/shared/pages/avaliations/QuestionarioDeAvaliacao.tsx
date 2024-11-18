@@ -4,7 +4,7 @@ import QuestionResponse from '../questions/Questionario';
 import { IResponseOption, Question } from '../questions/DetalheDeQuestoes';
 import { QuestionService } from '../../services/questions/QuestionService';
 import { ResponseOptionsService } from '../../services/response-options/ResponseOptionsService';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AnswerQuestionService } from '../../services/answer-questions/AnswerQuestionService';
 
 const AvaliationResponsePage: React.FC = () => {
@@ -13,6 +13,7 @@ const AvaliationResponsePage: React.FC = () => {
     const [responseOptions, setResponseOptions] = useState<IResponseOption[]>([]);
     const [responses, setResponses] = useState<string[]>([]);
     const [allRequiredAnswered, setAllRequiredAnswered] = useState<boolean>(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const loadQuestions = async () => {
@@ -92,6 +93,8 @@ const AvaliationResponsePage: React.FC = () => {
                 console.error(result.message);
             } else {
                 console.log("Respostas enviadas com sucesso.");
+                alert("Autoavaliação respondida com sucesso!");
+                navigate('/pagina-inicial');
             }
         } catch (error) {
             console.error('Erro ao enviar as respostas:', error);

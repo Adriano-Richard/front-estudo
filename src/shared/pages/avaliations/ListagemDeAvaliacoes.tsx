@@ -17,6 +17,7 @@ export const ListagemDeAvaliacoes: React.FC = () => {
     const [totalCount, setTotalCount] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [rows, setRows] = useState<IListAvaliation[]>([]);
+    const [answeredEvaluations, setAnsweredEvaluations] = useState<Record<string, boolean>>({});
 
     const { user } = useAuthContext();
 
@@ -30,23 +31,36 @@ export const ListagemDeAvaliacoes: React.FC = () => {
 
     useEffect(() => {
         setIsLoading(true);
-
-        debounce(() => {
-            AvaliationService.getAll(pagina, busca)
-            .then((result) => {
+    
+        const fetchData = async () => {
+            try {
+                const result = await AvaliationService.getAll(pagina, busca);
+    
                 setIsLoading(false);
-                
+    
                 if (result instanceof Error) {
                     alert(result.message);
                 } else {
-                    console.log(result);
-
                     setRows(result.data);
                     setTotalCount(result.totalCount);
+    
+                    // Verificar se o usuário respondeu a cada avaliação
+                    const verificationPromises = result.data.map(async (avaliation) => {
+                        const isAnswered = await AvaliationService.verifyResponse(avaliation.name);
+                        return { [avaliation.name]: isAnswered };
+                    });
+    
+                    const verificationResults = await Promise.all(verificationPromises);
+                    const answeredMap = verificationResults.reduce((acc, current) => ({ ...acc, ...current }), {});
+                    setAnsweredEvaluations(answeredMap);
                 }
-            });
-        })
-        
+            } catch (error) {
+                setIsLoading(false);
+                alert("Erro ao carregar dados.");
+            }
+        };
+    
+        fetchData();
     }, [busca, pagina]);
 
     // const handleDelete = (id: number) => {
@@ -106,6 +120,7 @@ export const ListagemDeAvaliacoes: React.FC = () => {
                                             variant="contained" 
                                             color="primary" 
                                             onClick={() => navigate(`/avaliacoes/responder/${row.name}`)}
+                                            disabled={answeredEvaluations[row.name]}
                                         >
                                             Responder
                                         </Button>

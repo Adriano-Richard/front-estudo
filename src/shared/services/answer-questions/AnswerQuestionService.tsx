@@ -12,12 +12,13 @@ const create = async (answers: IAnswerQuestionRequest[]): Promise<void | Error> 
         const urlRelativa = `/AnswerQuestion`;
 
         // Enviando a lista de respostas como payload na requisição POST
-        const { data } = await Api.post(urlRelativa, answers);
+        const response = await Api.post(urlRelativa, answers);
 
-        if (data) {
-            return;
+        // Verificar o status da resposta
+        if (response.status === 200 || response.status === 204) {
+            return; // Sucesso
         }
-        return new Error('Erro ao enviar as respostas.');
+        return new Error('Erro ao enviar as respostas. Status: ' + response.status);
     } catch (error) {
         return new Error((error as { message: string }).message || 'Erro ao enviar as respostas.');
     }

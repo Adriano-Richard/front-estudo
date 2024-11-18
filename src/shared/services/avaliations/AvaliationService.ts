@@ -104,11 +104,24 @@ const create = async (name: string): Promise<AvaliationResponse | Error> => {
     }
 };
 
+const verifyResponse = async (avaliationName: string): Promise<boolean> => {
+    try {
+        const userInfo = localStorage.getItem('APP_USER_INFO');
+        const userId = userInfo ? JSON.parse(userInfo).id : null;
+        
+        const response = await Api.get<boolean>(`Avaliation/Verify`, { params: { Name: avaliationName }, headers: { UserId: `${userId}` } });
+        return response.data;
+    } catch {
+        return false; // Assuma que não foi respondido em caso de erro
+    }
+};
+
 export const AvaliationService = {
     getByName,
     updateName,
     getAvaliationVerify,
     getAll,
     create,
-    updateById
+    updateById,
+    verifyResponse
 };
