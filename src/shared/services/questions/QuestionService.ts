@@ -41,8 +41,10 @@ const getAll = async (): Promise<TQuestions | Error> => {
 
 const getQuestionByAvaliationName = async (name: string): Promise<Question[] | Error> => {
     try {
+        const userInfo = localStorage.getItem('APP_USER_INFO');
+        const userId = userInfo ? JSON.parse(userInfo).id : null;
         const urlRelativa = `/Question?AvaliationName=${name}`;
-        const { data } = await Api.get(urlRelativa);
+        const { data } = await Api.get(urlRelativa, { headers: { UserId: `${userId}` } });
         if (data) {
             return data;
         }

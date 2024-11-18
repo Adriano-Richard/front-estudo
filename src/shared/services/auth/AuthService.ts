@@ -18,10 +18,11 @@ export const ageGroupMap: { [key: string]: number } = {
 
 // Mapeamento para o enum Title
 export const titleMap: { [key: string]: number } = {
-  "Graduado": 0,
-  "Especialista": 1,
-  "Mestre": 2,
-  "Doutor": 3,
+  "Aluno": 0,
+  "Graduado": 1,
+  "Especialista": 2,
+  "Mestre": 3,
+  "Doutor": 4,
 };
 
 // Mapeamento para o enum ExperienceLevel

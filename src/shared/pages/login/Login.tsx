@@ -67,7 +67,7 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
           md={7}
           sx={{
             backgroundImage:
-              'url("/login-images/22.png")',
+              'url("/login-images/palmas.jpg")',
 
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],

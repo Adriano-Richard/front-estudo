@@ -18,7 +18,7 @@ export const Dashboard = () => {
                 if (result instanceof Error) {
                     alert(result.message);
                 } else {
-                    setTotalCountAvaliations(result.totalCount);
+                    setTotalCountAvaliations(1);
                 }
             });
             
@@ -60,7 +60,7 @@ export const Dashboard = () => {
                                     </CardContent>
                                 </Card>
                             </Grid>
-                            <Grid item xs={12} sm={12} md={6} lg={4} xl={3}>
+                            {/* <Grid item xs={12} sm={12} md={6} lg={4} xl={3}>
                                 <Card>
                                 <CardContent>
                                         <Typography variant="h5" align="center">
@@ -80,7 +80,7 @@ export const Dashboard = () => {
                                         </Box>
                                     </CardContent>
                                 </Card>
-                            </Grid>
+                            </Grid> */}
                         </Grid>
                     </Grid>
 
