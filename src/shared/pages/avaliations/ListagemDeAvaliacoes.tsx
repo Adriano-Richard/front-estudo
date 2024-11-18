@@ -83,8 +83,9 @@ export const ListagemDeAvaliacoes: React.FC = () => {
         barraDeFerramentas={<FerramentasDaListagem
             mostrarInputBusca
             textoDaBusca={busca}
-            textoBotaoNovo='Nova' 
-            aoClicarEmNovo={() => navigate('/avaliacoes/detalhe/nova')}
+            mostrarBotaoNovo={user?.cargo === 'admin' ? true : false}
+            textoBotaoNovo={user?.cargo === 'admin' ? 'Nova' : undefined} // Exibe o botão "Nova" apenas para admin
+            aoClicarEmNovo={user?.cargo === 'admin' ? () => navigate('/avaliacoes/detalhe/nova') : undefined} 
             aoMudarTextoDeBusca={texto => setSearchParams({ busca: texto, pagina: '1' }, { replace: true })}
             />
         }         
