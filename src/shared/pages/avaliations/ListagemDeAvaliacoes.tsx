@@ -3,7 +3,6 @@ import { FerramentasDaListagem } from "../../components"
 import { LayoutBaseDePagina } from "../../layouts"
 import { useEffect, useMemo, useState } from "react";
 import { AvaliationService, IListAvaliation } from "../../services/avaliations/AvaliationService";
-import { useDebounce } from "../../hooks/UseDebounce";
 import { Button, Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
 import { Environment } from "../../environment";
 import { useAuthContext } from "../../contexts";
@@ -11,7 +10,6 @@ import { useAuthContext } from "../../contexts";
 
 export const ListagemDeAvaliacoes: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const { debounce } = useDebounce();
     const navigate = useNavigate();
 
     const [totalCount, setTotalCount] = useState(0);
