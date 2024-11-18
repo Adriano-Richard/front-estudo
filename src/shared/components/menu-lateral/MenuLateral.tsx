@@ -57,7 +57,7 @@ export const MenuLateral: React.FC<IMenuLateral> = ({ children }) => {
 
     const filteredDrawerOptions = drawerOptions.filter((drawerOption) => {
         // Adicione a lógica para filtrar as opções de menu com base no cargo do usuário
-        if (user?.cargo === 'Aluno') {
+        if (user?.cargo !== 'admin') {
             // Por exemplo, se for Aluno, não mostrar "Questões" e "Universidades"
             return drawerOption.path !== '/questoes/detalhe' && drawerOption.path !== '/universidades';
         }
