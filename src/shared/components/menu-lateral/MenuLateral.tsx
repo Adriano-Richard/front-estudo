@@ -55,6 +55,10 @@ export const MenuLateral: React.FC<IMenuLateral> = ({ children }) => {
     const handleNavigate = () => {
         navigate('/usuarios/detalhe'); // Substitua '/perfil' pela rota desejada
     };
+    const handleLogout = () => {
+        logout(); // Chama o método de logout do AuthContext
+        navigate('/'); // Redireciona para a página de login
+      };
 
     const filteredDrawerOptions = drawerOptions.filter((drawerOption) => {
         // Adicione a lógica para filtrar as opções de menu com base no cargo do usuário
@@ -149,7 +153,7 @@ export const MenuLateral: React.FC<IMenuLateral> = ({ children }) => {
                             </ListItemIcon>
                             {!isCompact && <ListItemText primary="Alternar tema" />}
                         </ListItemButton>
-                        <ListItemButton onClick={logout}>
+                        <ListItemButton onClick={handleLogout}>
                             <ListItemIcon>
                                 <Icon>logout</Icon>
                             </ListItemIcon>
