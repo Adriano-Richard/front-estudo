@@ -1,93 +1,51 @@
 import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import MenuIcon from "@mui/icons-material/Menu";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
-
-interface AdminNavbarProps {
-  brandText: string;
-  sidebarOpened: boolean;
-  toggleSidebar: () => void;
-  children: React.ReactNode
-}
+import { useCompactMenuContext } from "../../contexts";
 
 const StyledToolbar = styled(Toolbar)(() => ({
   justifyContent: "space-between",
+  paddingLeft: 16,
+  paddingRight: 16,
 }));
+
+interface AdminNavbarProps {
+  brandText: string;
+  children?: React.ReactNode;
+}
 
 export const AdminNavbar: React.FC<AdminNavbarProps> = ({
   brandText,
-  toggleSidebar,
   children,
 }) => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const { isCompact } = useCompactMenuContext(); // Usa o estado do menu lateral
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const sidebarWidth = isCompact ? 56 : 240; // Largura do menu lateral (compacto ou expandido)
 
   return (
-    <>
-        <AppBar position="static">
-        <StyledToolbar>
-            <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            onClick={toggleSidebar}
-            >
-            <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" noWrap>
-            {brandText}
-            </Typography>
-            <div>
-            <IconButton
-                edge="end"
-                color="inherit"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                >
-                <AccountCircle />
-            </IconButton>
-            <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-                >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>Settings</MenuItem>
-                <MenuItem onClick={handleClose}>Log out</MenuItem>
-            </Menu>
-            </div>
-        </StyledToolbar>
-        </AppBar>
-        <Box height='100vh'>
-                {children}
-        </Box> 
-    </>
+    <AppBar
+      position="fixed"
+      elevation={1}
+      sx={{
+        backgroundColor: "#ffffff",
+        color: "#000000",
+        left: `${sidebarWidth}px`, // Ajusta a posição com base no menu lateral
+        width: `calc(100% - ${sidebarWidth}px)`, // Preenche o espaço restante
+        transition: "all 0.3s", // Suaviza a transição
+      }}
+    >
+      <StyledToolbar>
+        <Typography variant="h6" noWrap>
+          {brandText}
+        </Typography>
+        <Box display="flex" alignItems="center" gap={2}>
+          {children}
+        </Box>
+      </StyledToolbar>
+    </AppBar>
   );
 };
 

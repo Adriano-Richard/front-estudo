@@ -36,7 +36,7 @@ const ListItemLink: React.FC<IListItemLink> = ({ to, icon, label, onClick, isDra
 };
 
 interface IMenuLateral{
-    children: React.ReactNode
+    children?: React.ReactNode
 }
 
 export const MenuLateral: React.FC<IMenuLateral> = ({ children }) => {
@@ -64,7 +64,7 @@ export const MenuLateral: React.FC<IMenuLateral> = ({ children }) => {
         // Adicione a lógica para filtrar as opções de menu com base no cargo do usuário
         if (user?.cargo !== 'admin') {
             // Por exemplo, se for Aluno, não mostrar "Questões" e "Universidades"
-            return drawerOption.path !== '/questoes/detalhe' && drawerOption.path !== '/universidades';
+            return drawerOption.path !== '/questoes/detalhe' && drawerOption.path !== '/universidades' && drawerOption.path !== '/painel';
         }
         // Permitir todas as opções para outros cargos
         return true;

@@ -10,5 +10,5 @@ export const Environment = {
 
     LISTAGEM_VAZIA: 'Nenhum registro encontrado.',
 
-    URL_BASE: 'https://104f-2804-1b2-b881-fd56-4d37-386c-687a-853.ngrok-free.app/api/v1',
+    URL_BASE: 'https://localhost:32768/api/v1',
 };

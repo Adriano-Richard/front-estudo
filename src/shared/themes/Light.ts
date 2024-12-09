@@ -1,5 +1,6 @@
 import { createTheme } from '@mui/material';
 import { blue, cyan } from '@mui/material/colors';
+import '@fontsource/inter';
 
 export const LightTheme = createTheme({
   palette: {
@@ -17,12 +18,12 @@ export const LightTheme = createTheme({
     },
     background: {
       paper: '#ffffff',
-      default: '#f7f6f3',
+      default: '#F5F7FA',
     },
   },
   typography:{
     allVariants:{
-      fontFamily: 'inherit',
+      fontFamily: 'Inter',
       color: '#071952'
     }
   },

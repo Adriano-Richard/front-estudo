@@ -8,6 +8,7 @@ import { ListagemDeUniversidades } from "../shared/pages/universities/ListagemDe
 import PrivateRoute from "../shared/pages/private-route/PrivateRoute";
 import AvaliationResponsePage from "../shared/pages/avaliations/QuestionarioDeAvaliacao";
 import { Box } from "@mui/material";
+import { PainelAdmin } from "../shared/pages/admin-graphs/PainelAdmin";
 
 export const router = createBrowserRouter([
   {
@@ -61,6 +62,10 @@ export const router = createBrowserRouter([
       {
         path: "/universidades",
         element: <ListagemDeUniversidades />
+      },
+      {
+        path: "/painel",
+        element: <PainelAdmin />
       }
     ],
   },
@@ -95,6 +100,11 @@ function Layout() {
           icon: 'book',
           path: '/universidades',
           label: 'Universades',
+        },
+        {
+          icon: 'bar_chart',
+          path: '/painel',
+          label: 'Painel',
         }
       ]);
     }, []);
